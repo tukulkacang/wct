@@ -1,593 +1,533 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Admin - WARUNG CT</title>
-    <link rel="stylesheet" href="share.css">
-    <link rel="stylesheet" href="pwa.css">
-    <style>
-        :root {
-            --gold: #f5c518; --gold-dark: #c49b12;
-            --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
-            --border: #2a2a2a; --text: #f0ede6; --muted: #666666;
-            --danger: #ff4545; --success: #22c55e; --orange: #fb923c;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Syne', sans-serif; }
-        body {
-            background: var(--bg); color: var(--text); min-height:100vh; padding-bottom:80px; position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 9999;
-        }
-        .container { max-width:600px; margin:0 auto; padding:16px; position: relative; z-index: 1; }
-        header {
-            background: var(--surface); color: var(--text);
-            padding: 24px 16px; text-align: center;
-            border-bottom: 1px solid var(--border); border-radius: 0 0 24px 24px;
-            margin-bottom: 20px; position: relative; overflow: hidden;
-        }
-        header::before {
-            content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
-            width: 300px; height: 300px;
-            background: radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        header h1 {
-            font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
-            letter-spacing: 3px; color: var(--gold);
-            text-shadow: 0 0 40px rgba(245,197,24,0.4);
-            position: relative;
-        }
-        .notif-badge {
-            position: absolute; top: 16px; right: 16px;
-            background: var(--danger); color: white;
-            width: 24px; height: 24px; border-radius: 50%;
-            font-size: 0.7rem; font-weight: 700;
-            display: none; align-items: center; justify-content: center;
-            box-shadow: 0 0 10px rgba(255,69,69,0.4);
-            animation: pulseBadge 1.5s infinite;
-        }
-        @keyframes pulseBadge { 0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.4)} 50%{box-shadow:0 0 0 8px rgba(255,69,69,0)} }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Admin – WARUNG CT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Cormorant:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0c09;--s1:#161210;--s2:#1c1814;--s3:#231e18;--s4:#2a2420;
+  --au:#c8913a;--au-hi:#e8c070;--au-lo:#8a6228;
+  --au-glow:rgba(200,145,58,0.12);--au-ring:rgba(200,145,58,0.24);
+  --parch:#f0e4cc;--p2:#a08660;--p3:#5e4c34;--p4:rgba(240,228,204,0.05);
+  --wire:rgba(255,255,255,0.06);--wire2:rgba(255,255,255,0.10);
+  --ok:#4db870;--ok-bg:rgba(77,184,112,0.07);
+  --no:#d95b4a;--no-bg:rgba(217,91,74,0.07);
+  --warn:#e09050;--warn-bg:rgba(224,144,80,0.07);
+  --r:16px;--rs:11px;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);color:var(--parch);font-family:'DM Sans',sans-serif;
+  font-weight:400;min-height:100vh;padding-bottom:60px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(200,145,58,0.04) 0%, transparent 60%);
+}
+.wrap{max-width:600px;margin:0 auto;padding:0 16px 24px;}
 
-        .card {
-            background: var(--surface); border-radius: 16px;
-            padding: 18px; margin-bottom: 16px;
-            border: 1px solid var(--border); position: relative;
-        }
-        .card-title {
-            font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
-            letter-spacing: 1px; margin-bottom: 14px;
-            display: flex; align-items: center; gap: 8px; color: var(--text);
-        }
-        label { font-size: 0.8rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-        input, select, textarea {
-            width: 100%; padding: 12px 14px;
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 10px; font-size: 0.95rem;
-            color: var(--text); outline: none; transition: all 0.2s;
-            font-family: 'Syne', sans-serif;
-        }
-        input::placeholder { color: var(--muted); }
-        input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,197,24,0.1); }
-        .row { display: flex; gap: 10px; }
-        .col { flex: 1; }
-        .btn {
-            padding: 12px 16px; border: none; border-radius: 10px;
-            font-size: 0.95rem; font-weight: 700; cursor: pointer;
-            transition: all 0.2s; font-family: 'Syne', sans-serif;
-        }
-        .btn-primary {
-            background: var(--gold); color: var(--bg); width: 100%; margin-top: 10px;
-            box-shadow: 0 0 15px rgba(245,197,24,0.1);
-        }
-        .btn-primary:hover { background: var(--gold-dark); box-shadow: 0 0 25px rgba(245,197,24,0.2); }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-danger { background: rgba(255,69,69,0.15); color: var(--danger); border: 1px solid rgba(255,69,69,0.3); }
-        .btn-danger:hover { background: rgba(255,69,69,0.25); }
-        .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
-        .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
-        .menu-admin-item {
-            display: flex; gap: 8px; align-items: center;
-            margin-bottom: 8px; padding: 10px;
-            background: var(--surface2); border-radius: 10px;
-            border: 1px solid var(--border); flex-wrap: wrap;
-        }
-        .menu-admin-item input, .menu-admin-item select { margin: 0; }
-        .music-admin-item {
-            display: flex; gap: 8px; align-items: center;
-            margin-bottom: 8px;
-        }
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background: var(--border); transition: .4s; border-radius: 28px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 20px; width: 20px;
-            left: 4px; bottom: 4px; background: var(--text); transition: .4s; border-radius: 50%;
-        }
-        input:checked + .slider { background: var(--gold); }
-        input:checked + .slider:before { transform: translateX(22px); background: var(--bg); }
-        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-        .saved { color: var(--success); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
-        .back-link { display: inline-block; margin-bottom: 16px; color: var(--gold); text-decoration: none; font-weight: 600; }
-        .back-link:hover { color: var(--gold-dark); }
-        .section-desc { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
-        .qr-admin-box { text-align: center; background: var(--surface2); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
-        .qr-admin-box canvas { border-radius: 8px; }
-        .qr-admin-box p { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
-        .btn-qr { background: var(--success); color: var(--bg); width: auto; padding: 10px 20px; }
-        .btn-qr:hover { background: #1ea446; }
+/* HEADER */
+.hdr{background:#0a0806;position:relative;overflow:hidden;}
+.hdr-rule{height:1px;}
+.hdr-rule.top{background:linear-gradient(90deg,transparent 0%,var(--au-lo) 30%,var(--au-hi) 50%,var(--au-lo) 70%,transparent 100%);}
+.hdr-rule.btm{background:linear-gradient(90deg,transparent 0%,var(--au-ring) 40%,var(--au-ring) 60%,transparent 100%);}
+.hdr-inner{max-width:600px;margin:0 auto;padding:22px 20px 18px;text-align:center;position:relative;}
+.hdr-glow{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);width:280px;height:80px;background:radial-gradient(ellipse,rgba(200,145,58,0.12) 0%,transparent 70%);pointer-events:none;}
+.hdr-ttl{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--parch);letter-spacing:3px;}
+.hdr-ttl em{font-style:normal;color:var(--au);}
+.hdr-sub{font-family:'Cormorant',serif;font-style:italic;font-size:13px;color:var(--p3);margin-top:4px;letter-spacing:1px;}
+.notif-badge{position:absolute;top:18px;right:18px;background:var(--no);color:#fff;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:600;display:none;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(217,91,74,0.4);animation:pulseBadge 1.5s infinite;}
+@keyframes pulseBadge{0%,100%{box-shadow:0 0 0 0 rgba(217,91,74,0.4)}50%{box-shadow:0 0 0 8px rgba(217,91,74,0)}}
+.back-lnk{display:inline-flex;align-items:center;gap:6px;color:var(--au);text-decoration:none;font-size:13px;font-weight:400;margin:20px 0 4px;transition:color 0.2s;}
+.back-lnk:hover{color:var(--au-hi);}
 
-        .order-banner {
-            background: linear-gradient(135deg, rgba(231,76,60,0.2), rgba(192,57,43,0.2));
-            color: var(--danger); border: 1px solid rgba(255,69,69,0.3);
-            border-radius: 12px; padding: 14px;
-            margin-bottom: 16px; display: none;
-            align-items: center; gap: 12px;
-            animation: pulseBanner 1.5s infinite;
-            cursor: pointer; backdrop-filter: blur(4px);
-        }
-        .order-banner.show { display: flex; }
-        .order-banner-icon { font-size: 1.5rem; }
-        .order-banner-text { flex: 1; }
-        .order-banner-title { font-weight: 700; font-size: 0.95rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
-        .order-banner-sub { font-size: 0.8rem; opacity: 0.9; }
-        @keyframes pulseBanner { 0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.2)} 50%{box-shadow:0 0 0 10px rgba(255,69,69,0)} }
+/* ORDER BANNER */
+.order-banner{
+  display:none;background:rgba(217,91,74,0.06);border:1px solid rgba(217,91,74,0.22);
+  border-radius:var(--r);padding:14px 16px;margin-bottom:14px;
+  align-items:center;gap:12px;cursor:pointer;
+  animation:glowBanner 1.8s infinite;
+}
+.order-banner.show{display:flex;}
+.banner-ic{font-size:22px;}
+.banner-ttl{font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--no);}
+.banner-sub{font-size:11px;color:var(--no);opacity:0.7;margin-top:2px;font-weight:300;}
+@keyframes glowBanner{0%,100%{box-shadow:0 0 0 0 rgba(217,91,74,0.15)}50%{box-shadow:0 0 0 8px rgba(217,91,74,0)}}
 
-        .order-list { max-height: 300px; overflow-y: auto; }
-        .order-item {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px; background: var(--surface2); border-radius: 10px;
-            margin-bottom: 8px; border-left: 3px solid var(--gold);
-            border: 1px solid var(--border); border-left: 3px solid var(--gold);
-        }
-        .order-item.new { border-left-color: var(--danger); background: rgba(255,69,69,0.05); animation: highlight 2s; }
-        @keyframes highlight { 0%{background:rgba(255,69,69,0.1)} 100%{background:rgba(255,69,69,0.05)} }
-        .order-info { flex: 1; }
-        .order-name { font-weight: 700; font-size: 0.9rem; }
-        .order-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-        .order-total { font-weight: 700; color: var(--gold); font-size: 0.95rem; font-family: 'Bebas Neue', sans-serif; }
-        .order-empty { text-align: center; color: var(--muted); padding: 20px; font-size: 0.9rem; }
-        .sound-toggle {
-            display: flex; align-items: center; gap: 8px;
-            font-size: 0.85rem; color: var(--muted); margin-bottom: 10px;
-        }
-        .cat-badge {
-            font-size: 0.65rem; padding: 3px 10px; border-radius: 10px;
-            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
-            display: inline-block; margin-bottom: 4px;
-        }
-        .cat-makanan { background: rgba(245,197,24,0.1); color: var(--gold); border: 1px solid rgba(245,197,24,0.2); }
-        .cat-minuman { background: rgba(34,197,94,0.1); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
-        .cat-tambahan { background: rgba(251,146,60,0.1); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
-        select {
-            background: var(--surface2); color: var(--text); border: 1px solid var(--border);
-        }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-    </style>
+/* CARD */
+.card{background:var(--s1);border:1px solid var(--wire);border-radius:var(--r);padding:20px;margin-bottom:14px;}
+.card-ttl{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--parch);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+
+/* LABEL */
+.lbl{font-size:8px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--p3);margin-bottom:5px;margin-top:14px;display:block;}
+.lbl:first-child{margin-top:0;}
+
+/* FIELD */
+.field{width:100%;background:var(--s2);border:1px solid var(--wire);border-radius:var(--rs);padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--parch);outline:none;transition:all 0.2s;margin-bottom:0;appearance:none;}
+.field::placeholder{color:var(--p3);}
+.field:focus{border-color:var(--au-ring);background:var(--s3);box-shadow:0 0 0 3px var(--au-glow);}
+.field-sm{padding:10px 12px;font-size:12px;}
+textarea.field{resize:none;min-height:80px;}
+
+.row{display:flex;gap:10px;}
+.col{flex:1;}
+
+/* TOGGLE */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--wire);}
+.toggle-row:last-child{border:none;}
+.tgl-lbl{font-size:13px;color:var(--parch);font-weight:400;}
+.switch{position:relative;display:inline-block;width:46px;height:26px;}
+.switch input{opacity:0;width:0;height:0;}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--s4);transition:.3s;border-radius:26px;border:1px solid var(--wire);}
+.slider::before{position:absolute;content:'';height:18px;width:18px;left:3px;bottom:3px;background:var(--p2);transition:.3s;border-radius:50%;}
+input:checked+.slider{background:linear-gradient(135deg,var(--au),var(--au-hi));border-color:var(--au-ring);}
+input:checked+.slider::before{transform:translateX(20px);background:#0a0806;}
+
+/* BUTTONS */
+.btn-gold{width:100%;border:none;border-radius:var(--rs);padding:13px;background:linear-gradient(135deg,var(--au),var(--au-hi));color:#0a0806;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-top:10px;box-shadow:0 4px 16px rgba(200,145,58,0.22);}
+.btn-gold:hover{box-shadow:0 6px 24px rgba(200,145,58,0.36);transform:translateY(-1px);}
+.btn-gold.full{padding:15px;font-size:13px;letter-spacing:2.5px;}
+.btn-line{width:100%;background:transparent;border:1px solid var(--wire2);border-radius:var(--rs);padding:12px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--p2);cursor:pointer;transition:all 0.2s;margin-top:8px;display:block;}
+.btn-line:hover{border-color:var(--au-ring);color:var(--parch);}
+.btn-sm{padding:7px 11px;font-size:11px;border-radius:var(--rx);cursor:pointer;transition:all 0.15s;}
+.btn-del{background:var(--no-bg);border:1px solid rgba(217,91,74,0.22);color:var(--no);}
+.btn-del:hover{background:rgba(217,91,74,0.14);}
+.btn-sec{background:var(--s2);border:1px solid var(--wire2);color:var(--p2);font-family:'DM Sans',sans-serif;}
+.btn-sec:hover{border-color:var(--au-ring);color:var(--au);}
+
+/* HOLIDAYS */
+.hday-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+.hday-item{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:400;cursor:pointer;background:var(--s2);padding:5px 12px;border-radius:100px;border:1px solid var(--wire);color:var(--parch);transition:all 0.15s;}
+.hday-item input{accent-color:var(--au);}
+.hday-item:has(input:checked){background:var(--au-glow);border-color:var(--au-ring);color:var(--au);}
+
+/* QR ADMIN */
+.qr-admin{background:var(--s2);border-radius:14px;padding:16px;text-align:center;margin-bottom:14px;border:1px solid var(--wire);}
+.qr-admin canvas{border-radius:8px;}
+.qr-admin p{font-size:11px;color:var(--p3);margin-top:8px;font-weight:300;}
+.btn-row{display:flex;gap:8px;}
+
+/* ORDERS */
+.sound-row{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--p2);margin-bottom:14px;font-weight:300;}
+.order-list{max-height:280px;overflow-y:auto;}
+.order-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:var(--s2);border-radius:var(--rs);margin-bottom:6px;border-left:2px solid var(--au);border:1px solid var(--wire);border-left:2px solid var(--au);transition:all 0.2s;}
+.order-item.new{border-left-color:var(--no);background:rgba(217,91,74,0.04);}
+.o-name{font-weight:500;font-size:13px;color:var(--parch);}
+.o-meta{font-size:11px;color:var(--p3);margin-top:2px;font-weight:300;}
+.o-total{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--au);}
+.order-empty{text-align:center;color:var(--p3);padding:24px;font-size:12px;font-style:italic;font-weight:300;}
+
+/* MENU ADMIN ITEMS */
+.menu-admin-row{display:flex;gap:7px;align-items:center;margin-bottom:7px;flex-wrap:wrap;}
+.menu-admin-row .field{margin-bottom:0;}
+.music-row{display:flex;gap:7px;align-items:center;margin-bottom:7px;}
+.music-row .field{margin-bottom:0;}
+
+/* CAT PILLS */
+.cat-pill{display:inline-flex;align-items:center;gap:5px;font-size:7.5px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:12px;}
+.cp-food{background:rgba(200,145,58,0.08);color:var(--au);border:1px solid rgba(200,145,58,0.2);}
+.cp-drink{background:rgba(77,184,112,0.07);color:var(--ok);border:1px solid rgba(77,184,112,0.18);}
+.cp-extra{background:rgba(224,144,80,0.07);color:var(--warn);border:1px solid rgba(224,144,80,0.18);}
+
+/* SAVE NOTIF */
+.save-ok{font-size:12px;color:var(--ok);text-align:center;margin-top:10px;display:none;font-weight:400;}
+
+/* BACKUP */
+.sec-note{font-size:11px;color:var(--p3);margin-bottom:12px;line-height:1.6;font-weight:300;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--wire2);border-radius:2px;}
+</style>
 </head>
 <body>
-    <header>
-        <h1>⚙️ PENGATURAN WARUNG CT</h1>
-        <div class="notif-badge" id="notifBadge">0</div>
-    </header>
-    <div class="container">
-        <a href="index.html" class="back-link">← Kembali ke Halaman Pesan</a>
 
-        <div class="order-banner" id="orderBanner" onclick="scrollToOrders()">
-            <div class="order-banner-icon">🔔</div>
-            <div class="order-banner-text">
-                <div class="order-banner-title">Pesanan Baru Masuk!</div>
-                <div class="order-banner-sub">Klik untuk lihat detail</div>
-            </div>
-        </div>
+<header class="hdr">
+  <div class="hdr-rule top"></div>
+  <div class="hdr-inner">
+    <div class="hdr-glow"></div>
+    <div class="hdr-ttl">Warung <em>CT</em></div>
+    <div class="hdr-sub">Panel Pengaturan</div>
+    <div class="notif-badge" id="notifBadge">0</div>
+  </div>
+  <div class="hdr-rule btm"></div>
+</header>
 
-        <div class="card" id="ordersCard">
-            <div class="card-title"><span>📋</span> Order Masuk</div>
-            <div class="sound-toggle">
-                <label class="switch" style="width:40px;height:22px;">
-                    <input type="checkbox" id="soundToggle" checked>
-                    <span class="slider" style="border-radius:22px;"></span>
-                </label>
-                <span>🔔 Notifikasi Suara</span>
-            </div>
-            <div class="order-list" id="orderList">
-                <div class="order-empty">Belum ada pesanan masuk.</div>
-            </div>
-        </div>
+<div class="wrap">
+  <a href="index.html" class="back-lnk">← Kembali ke halaman pesan</a>
 
-        <div class="card">
-            <div class="card-title"><span>🔗</span> Bagikan ke Customer</div>
-            <p class="section-desc">Customer bisa scan QR atau klik link untuk langsung ke halaman pesan.</p>
-            <div class="qr-admin-box">
-                <canvas id="adminQrCanvas" width="180" height="180"></canvas>
-                <p>Scan QR untuk pesan</p>
-            </div>
-            <div class="row">
-                <button class="btn btn-qr" onclick="showShareModal()">🔗 Link & QR Besar</button>
-                <button class="btn btn-secondary" onclick="copyShareUrl()">📋 Salin Link</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🏪</span> Informasi Restoran</div>
-            <label>Nama Restoran</label>
-            <input type="text" id="cfgName" placeholder="Nama Restoran">
-            <label>Nomor WhatsApp Owner (format: 628xx)</label>
-            <input type="text" id="cfgWa" placeholder="6281234567890">
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🕐</span> Jam Operasional</div>
-            <div class="row">
-                <div class="col">
-                    <label>Jam Buka</label>
-                    <input type="time" id="cfgOpen">
-                </div>
-                <div class="col">
-                    <label>Jam Tutup</label>
-                    <input type="time" id="cfgClose">
-                </div>
-            </div>
-            <div class="toggle-row" style="margin-top:14px;">
-                <span>Tutup Lebih Cepat</span>
-                <label class="switch">
-                    <input type="checkbox" id="cfgEarly">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <label style="margin-top:10px;">Hari Libur</label>
-            <div id="holidayList" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;"></div>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>📍</span> Lokasi & Pengantaran</div>
-            <div class="row">
-                <div class="col">
-                    <label>Latitude</label>
-                    <input type="number" step="any" id="cfgLat" placeholder="-7.1665">
-                </div>
-                <div class="col">
-                    <label>Longitude</label>
-                    <input type="number" step="any" id="cfgLng" placeholder="112.3265">
-                </div>
-            </div>
-            <div class="row" style="margin-top:10px;">
-                <div class="col">
-                    <label>Area Cover (km)</label>
-                    <input type="number" id="cfgCover" placeholder="10">
-                </div>
-            </div>
-            <label style="margin-top:10px;">Ongkir Km Pertama (Rp)</label>
-            <input type="number" id="cfgRateFirst" placeholder="2000">
-            <label>Ongkir Km Kedua & Seterusnya (Rp/km)</label>
-            <input type="number" id="cfgRateNext" placeholder="1000">
-            <p class="section-desc">Contoh: 3 km = Rp 2.000 + (2 × Rp 1.000) = Rp 4.000</p>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🍔</span> Menu Makanan</div>
-            <div id="menuMakananList"></div>
-            <button class="btn btn-primary" onclick="addMenuItem('makanan')">+ Tambah Makanan</button>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🥤</span> Menu Minuman</div>
-            <div id="menuMinumanList"></div>
-            <button class="btn btn-primary" onclick="addMenuItem('minuman')">+ Tambah Minuman</button>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🍟</span> Menu Tambahan</div>
-            <div id="menuTambahanList"></div>
-            <button class="btn btn-primary" onclick="addMenuItem('tambahan')">+ Tambah Tambahan</button>
-        </div>
-
-        <div class="card">
-            <div class="card-title"><span>🎵</span> Playlist Musik</div>
-            <p class="section-desc">Masukkan link langsung ke file mp3/audio.</p>
-            <div id="musicAdminList"></div>
-            <button class="btn btn-primary" onclick="addMusicItem()">+ Tambah Lagu</button>
-        </div>
-
-        <button class="btn btn-primary" onclick="saveConfig()" style="padding:16px; font-size:1.05rem;">
-            💾 Simpan Semua Pengaturan
-        </button>
-        <div class="saved" id="saveNotif">✅ Pengaturan berhasil disimpan!</div>
-
-        <div class="card" style="margin-top:20px;">
-            <div class="card-title"><span>💾</span> Backup / Restore</div>
-            <button class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
-            <label style="margin-top:10px;">Import Data (paste JSON)</label>
-            <textarea id="importArea" rows="4" placeholder="Paste JSON di sini..."></textarea>
-            <button class="btn btn-primary" onclick="importData()">📤 Import Data</button>
-        </div>
+  <!-- ORDER BANNER -->
+  <div class="order-banner" id="orderBanner" onclick="scrollToOrders()">
+    <div class="banner-ic">🔔</div>
+    <div>
+      <div class="banner-ttl" id="bannerTtl">Pesanan Baru Masuk!</div>
+      <div class="banner-sub">Klik untuk lihat detail</div>
     </div>
+  </div>
 
-    <script src="share.js"></script>
-    <script src="pwa.js"></script>
-    <script>
-        let config = {};
-        const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-        let lastOrderCount = 0;
-        let audioCtx = null;
+  <!-- ORDERS -->
+  <div class="card" id="ordersCard">
+    <div class="card-ttl">📋 Order Masuk</div>
+    <div class="sound-row">
+      <label class="switch" style="width:40px;height:22px;">
+        <input type="checkbox" id="soundToggle" checked>
+        <span class="slider" style="border-radius:22px;"></span>
+      </label>
+      <span>Notifikasi suara</span>
+    </div>
+    <div class="order-list" id="orderList">
+      <div class="order-empty">Belum ada pesanan masuk.</div>
+    </div>
+  </div>
 
-        function init() {
-            loadConfig();
-            renderForm();
-            renderHolidays();
-            renderAllMenus();
-            renderMusicAdmin();
-            generateAdminQR();
-            loadOrders();
-            startOrderPolling();
-        }
+  <!-- SHARE QR -->
+  <div class="card">
+    <div class="card-ttl">🔗 Bagikan ke Customer</div>
+    <p class="sec-note">Customer bisa scan QR atau klik link untuk langsung ke halaman pesan.</p>
+    <div class="qr-admin">
+      <canvas id="adminQrCanvas" width="180" height="180"></canvas>
+      <p>Scan QR untuk memesan</p>
+    </div>
+    <div class="btn-row">
+      <button class="btn-sec btn-sm" style="flex:1;padding:11px;" onclick="showShareModal()">🔗 Link & QR</button>
+      <button class="btn-sec btn-sm" style="flex:1;padding:11px;" onclick="cpAdminUrl()">📋 Salin Link</button>
+    </div>
+  </div>
 
-        function startOrderPolling() {
-            loadOrders();
-            setInterval(() => { checkNewOrders(); }, 3000);
-        }
+  <!-- RESTAURANT INFO -->
+  <div class="card">
+    <div class="card-ttl">🏪 Informasi Restoran</div>
+    <span class="lbl">Nama Restoran</span>
+    <input type="text" id="cfgName" class="field" placeholder="Nama Restoran">
+    <span class="lbl" style="margin-top:12px;">Nomor WhatsApp Owner (format: 628xx)</span>
+    <input type="text" id="cfgWa" class="field" placeholder="6281234567890">
+  </div>
 
-        function checkNewOrders() {
-            const orders = JSON.parse(localStorage.getItem("resto_orders") || "[]");
-            if (orders.length > lastOrderCount) {
-                const newCount = orders.length - lastOrderCount;
-                lastOrderCount = orders.length;
-                showOrderNotification(newCount);
-                renderOrders(orders, true);
-            }
-        }
+  <!-- JAM OPERASIONAL -->
+  <div class="card">
+    <div class="card-ttl">🕐 Jam Operasional</div>
+    <div class="row">
+      <div class="col">
+        <span class="lbl">Jam Buka</span>
+        <input type="time" id="cfgOpen" class="field">
+      </div>
+      <div class="col">
+        <span class="lbl">Jam Tutup</span>
+        <input type="time" id="cfgClose" class="field">
+      </div>
+    </div>
+    <div class="toggle-row" style="margin-top:16px;">
+      <span class="tgl-lbl">Tutup Lebih Cepat</span>
+      <label class="switch"><input type="checkbox" id="cfgEarly"><span class="slider"></span></label>
+    </div>
+    <span class="lbl">Hari Libur</span>
+    <div class="hday-grid" id="holidayList"></div>
+  </div>
 
-        function showOrderNotification(count) {
-            const banner = document.getElementById("orderBanner");
-            banner.querySelector('.order-banner-title').textContent = `${count} Pesanan Baru Masuk!`;
-            banner.classList.add("show");
-            const badge = document.getElementById("notifBadge");
-            badge.textContent = count;
-            badge.style.display = "flex";
-            if (document.getElementById("soundToggle").checked) playBeep();
-            setTimeout(() => { banner.classList.remove("show"); }, 8000);
-        }
+  <!-- LOKASI -->
+  <div class="card">
+    <div class="card-ttl">📍 Lokasi & Pengantaran</div>
+    <div class="row">
+      <div class="col">
+        <span class="lbl">Latitude</span>
+        <input type="number" step="any" id="cfgLat" class="field" placeholder="-7.1665">
+      </div>
+      <div class="col">
+        <span class="lbl">Longitude</span>
+        <input type="number" step="any" id="cfgLng" class="field" placeholder="112.3265">
+      </div>
+    </div>
+    <span class="lbl" style="margin-top:12px;">Area Cover (km)</span>
+    <input type="number" id="cfgCover" class="field" placeholder="10">
+    <span class="lbl" style="margin-top:12px;">Ongkir Km Pertama (Rp)</span>
+    <input type="number" id="cfgRateFirst" class="field" placeholder="2000">
+    <span class="lbl" style="margin-top:12px;">Ongkir Km Kedua & Seterusnya (Rp/km)</span>
+    <input type="number" id="cfgRateNext" class="field" placeholder="1000">
+    <div style="font-size:11px;color:var(--p3);margin-top:8px;font-weight:300;">Contoh: 3 km = Rp 2.000 + (2 × Rp 1.000) = Rp 4.000</div>
+  </div>
 
-        function playBeep() {
-            try {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.type = 'sine'; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.4);
-                setTimeout(() => {
-                    const osc2 = audioCtx.createOscillator();
-                    const gain2 = audioCtx.createGain();
-                    osc2.connect(gain2); gain2.connect(audioCtx.destination);
-                    osc2.type = 'sine'; osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
-                    osc2.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
-                    gain2.gain.setValueAtTime(0.3, audioCtx.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-                    osc2.start(audioCtx.currentTime); osc2.stop(audioCtx.currentTime + 0.4);
-                }, 200);
-            } catch(e) {}
-        }
+  <!-- MENU MAKANAN -->
+  <div class="card">
+    <div class="card-ttl">🍔 Menu Makanan</div>
+    <div class="cat-pill cp-food">Makanan</div>
+    <div id="menuMakananList"></div>
+    <button class="btn-gold" onclick="addMenu('makanan')">+ Tambah Makanan</button>
+  </div>
 
-        function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem("resto_orders") || "[]");
-            lastOrderCount = orders.length;
-            renderOrders(orders, false);
-        }
+  <!-- MENU MINUMAN -->
+  <div class="card">
+    <div class="card-ttl">🥤 Menu Minuman</div>
+    <div class="cat-pill cp-drink">Minuman</div>
+    <div id="menuMinumanList"></div>
+    <button class="btn-gold" onclick="addMenu('minuman')">+ Tambah Minuman</button>
+  </div>
 
-        function renderOrders(orders, highlightNew) {
-            const box = document.getElementById("orderList");
-            if (!orders || orders.length === 0) {
-                box.innerHTML = '<div class="order-empty">Belum ada pesanan masuk.</div>';
-                return;
-            }
-            const sorted = [...orders].reverse();
-            box.innerHTML = sorted.map((o, i) => {
-                const date = new Date(o.date);
-                const timeStr = date.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
-                const isNew = highlightNew && i < (orders.length - lastOrderCount + sorted.length - orders.length);
-                return `
-                    <div class="order-item ${isNew?'new':''}">
-                        <div class="order-info">
-                            <div class="order-name">${o.name || 'Tanpa Nama'}</div>
-                            <div class="order-meta">${o.id} • ${timeStr}</div>
-                        </div>
-                        <div class="order-total">Rp ${(o.total||0).toLocaleString('id-ID')}</div>
-                    </div>
-                `;
-            }).join('');
-        }
+  <!-- MENU TAMBAHAN -->
+  <div class="card">
+    <div class="card-ttl">🍟 Menu Tambahan</div>
+    <div class="cat-pill cp-extra">Tambahan</div>
+    <div id="menuTambahanList"></div>
+    <button class="btn-gold" onclick="addMenu('tambahan')">+ Tambah Tambahan</button>
+  </div>
 
-        function scrollToOrders() {
-            document.getElementById("ordersCard").scrollIntoView({ behavior: 'smooth' });
-            document.getElementById("orderBanner").classList.remove("show");
-            document.getElementById("notifBadge").style.display = "none";
-        }
+  <!-- PLAYLIST -->
+  <div class="card">
+    <div class="card-ttl">🎵 Playlist Musik</div>
+    <p class="sec-note">Masukkan URL langsung ke file .mp3 atau audio lainnya. Akan diputar di halaman musik setelah customer memesan.</p>
+    <div id="musicAdminList"></div>
+    <button class="btn-gold" onclick="addMusic()">+ Tambah Lagu</button>
+  </div>
 
-        function loadConfig() {
-            const raw = localStorage.getItem("resto_config");
-            if (raw) config = JSON.parse(raw);
-            else {
-                config = {
-                    restaurantName: "WARUNG CT",
-                    openTime: "09:00",
-                    closeTime: "21:00",
-                    earlyClose: false,
-                    holidays: [],
-                    lat: -7.166571697154447,
-                    lng: 112.32652687664304,
-                    coverKm: 10,
-                    rateFirstKm: 2000,
-                    rateNextKm: 1000,
-                    waNumber: "6281234567890",
-                    menu: [
-                        { id:1, name:"Nasi Goreng Spesial", price:25000, image:"", category:"makanan" },
-                        { id:2, name:"Mie Ayam Bakso", price:20000, image:"", category:"makanan" },
-                        { id:3, name:"Es Teh Manis", price:5000, image:"", category:"minuman" },
-                        { id:4, name:"Kerupuk", price:2000, image:"", category:"tambahan" }
-                    ],
-                    music: []
-                };
-            }
-            if (config.menu && config.menu.length > 0 && !config.menu[0].category) {
-                config.menu.forEach(m => m.category = "makanan");
-            }
-            if (config.ratePerKm && !config.rateFirstKm) {
-                config.rateFirstKm = config.ratePerKm;
-                config.rateNextKm = config.ratePerKm;
-            }
-        }
+  <!-- SAVE -->
+  <button class="btn-gold full" onclick="saveCfg()">💾 Simpan Semua Pengaturan</button>
+  <div class="save-ok" id="saveOk">✅ Pengaturan berhasil disimpan!</div>
 
-        function generateAdminQR() {
-            const url = getBaseUrl() + "index.html";
-            const canvas = document.getElementById("adminQrCanvas");
-            if (!canvas) return;
-            const ctx = canvas.getContext("2d");
-            canvas.width = 180; canvas.height = 180;
-            if (navigator.onLine && window.location.protocol !== "file:") {
-                const img = new Image();
-                img.crossOrigin = "anonymous";
-                img.onload = () => ctx.drawImage(img, 0, 0, 180, 180);
-                img.onerror = () => drawFallbackQR(ctx, 180, url || "https://warung-ct.web.app");
-                img.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url || "https://warung-ct.web.app")}`;
-            } else {
-                drawFallbackQR(ctx, 180, url || "https://warung-ct.web.app");
-            }
-        }
+  <!-- BACKUP -->
+  <div class="card" style="margin-top:16px;">
+    <div class="card-ttl">💾 Backup / Restore</div>
+    <div class="btn-row">
+      <button class="btn-sec btn-sm" style="flex:1;padding:11px;" onclick="exportData()">📥 Export Data</button>
+    </div>
+    <span class="lbl" style="margin-top:14px;">Import Data (paste JSON)</span>
+    <textarea id="importArea" class="field" style="margin-top:6px;" placeholder="Paste JSON di sini…"></textarea>
+    <button class="btn-gold" onclick="importData()">📤 Import Data</button>
+  </div>
+</div>
 
-        function renderForm() {
-            document.getElementById("cfgName").value = config.restaurantName || "";
-            document.getElementById("cfgWa").value = config.waNumber || "";
-            document.getElementById("cfgOpen").value = config.openTime || "09:00";
-            document.getElementById("cfgClose").value = config.closeTime || "21:00";
-            document.getElementById("cfgEarly").checked = config.earlyClose || false;
-            document.getElementById("cfgLat").value = config.lat || "";
-            document.getElementById("cfgLng").value = config.lng || "";
-            document.getElementById("cfgCover").value = config.coverKm || "";
-            document.getElementById("cfgRateFirst").value = config.rateFirstKm || 2000;
-            document.getElementById("cfgRateNext").value = config.rateNextKm || 1000;
-        }
+<!-- SHARE MODAL -->
+<div id="shareModal" style="display:none;position:fixed;inset:0;background:rgba(4,3,2,0.85);backdrop-filter:blur(16px);z-index:500;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:var(--s1);border:1px solid var(--wire2);border-radius:22px;padding:28px 22px;max-width:320px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5);" onclick="event.stopPropagation()">
+    <div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:18px;color:var(--parch);">Bagikan Warung CT</div>
+    <div style="background:var(--s2);border-radius:14px;padding:16px;margin-bottom:14px;"><canvas id="shareQrCanvas" width="180" height="180" style="border-radius:8px;"></canvas></div>
+    <p id="shareUrlTxt" style="font-size:11px;color:var(--p2);word-break:break-all;margin-bottom:14px;background:var(--s2);padding:8px 12px;border-radius:9px;text-align:left;"></p>
+    <button onclick="cpAdminUrl()" style="width:100%;padding:13px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--au),var(--au-hi));color:#0a0806;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">Salin Link</button>
+    <button onclick="closeShareModal()" style="width:100%;padding:12px;border:1px solid var(--wire2);border-radius:11px;background:transparent;color:var(--p2);cursor:pointer;">Tutup</button>
+  </div>
+</div>
 
-        function renderHolidays() {
-            const box = document.getElementById("holidayList");
-            box.innerHTML = days.map((d,i) => `
-                <label style="display:flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:500; cursor:pointer; background:var(--surface2); padding:4px 10px; border-radius:20px; border:1px solid var(--border); color:var(--text);">
-                    <input type="checkbox" value="${i}" ${(config.holidays||[]).includes(i)?'checked':''}>
-                    ${d}
-                </label>
-            `).join("");
-        }
+<script>
+let cfg={}, lastOrderCount=0, audioCtx=null;
+const DAYS=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 
-        function renderAllMenus() {
-            renderMenuByCategory('makanan', 'menuMakananList');
-            renderMenuByCategory('minuman', 'menuMinumanList');
-            renderMenuByCategory('tambahan', 'menuTambahanList');
-        }
+function init(){
+  loadCfg(); renderForm(); renderHolidays();
+  renderMenuCat('makanan','menuMakananList');
+  renderMenuCat('minuman','menuMinumanList');
+  renderMenuCat('tambahan','menuTambahanList');
+  renderMusicAdmin();
+  genAdminQR();
+  loadOrders();
+  setInterval(checkNewOrders,3000);
+}
 
-        function renderMenuByCategory(cat, containerId) {
-            const box = document.getElementById(containerId);
-            if (!config.menu) config.menu = [];
-            const items = config.menu.filter(m => m.category === cat);
-            if (items.length === 0) {
-                box.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;padding:8px;">Belum ada menu.</p>';
-                return;
-            }
-            box.innerHTML = items.map((item, idx) => {
-                const realIdx = config.menu.indexOf(item);
-                return `
-                <div class="menu-admin-item">
-                    <input type="text" placeholder="Nama menu" value="${item.name}" onchange="config.menu[${realIdx}].name=this.value" style="flex:2;">
-                    <input type="number" placeholder="Harga" value="${item.price}" onchange="config.menu[${realIdx}].price=parseInt(this.value)||0" style="flex:1;">
-                    <input type="text" placeholder="URL Gambar (opsional)" value="${item.image||''}" onchange="config.menu[${realIdx}].image=this.value" style="flex:2;">
-                    <button class="btn btn-danger btn-sm" onclick="removeMenu(${realIdx})">🗑️</button>
-                </div>
-            `}).join("");
-        }
+function loadCfg(){
+  const raw=localStorage.getItem('resto_config');
+  if(raw){cfg=JSON.parse(raw);}
+  else{
+    cfg={
+      restaurantName:'WARUNG CT',openTime:'09:00',closeTime:'21:00',earlyClose:false,
+      holidays:[],lat:-7.166571697154447,lng:112.32652687664304,coverKm:10,
+      rateFirstKm:2000,rateNextKm:1000,waNumber:'6281234567890',
+      menu:[
+        {id:1,name:'Nasi Goreng Spesial',price:25000,image:'',category:'makanan'},
+        {id:2,name:'Mie Ayam Bakso',price:20000,image:'',category:'makanan'},
+        {id:3,name:'Es Teh Manis',price:5000,image:'',category:'minuman'},
+        {id:4,name:'Kerupuk',price:2000,image:'',category:'tambahan'}
+      ],music:[]
+    };
+  }
+  if(cfg.menu?.length&&!cfg.menu[0].category) cfg.menu.forEach(m=>m.category='makanan');
+  if(cfg.ratePerKm&&!cfg.rateFirstKm){cfg.rateFirstKm=cfg.ratePerKm;cfg.rateNextKm=cfg.ratePerKm;}
+}
 
-        function addMenuItem(category) {
-            const newId = config.menu.length > 0 ? Math.max(...config.menu.map(m=>m.id)) + 1 : 1;
-            config.menu.push({ id: newId, name:"", price:0, image:"", category });
-            renderAllMenus();
-        }
-        function removeMenu(idx) { config.menu.splice(idx,1); renderAllMenus(); }
+function renderForm(){
+  document.getElementById('cfgName').value=cfg.restaurantName||'';
+  document.getElementById('cfgWa').value=cfg.waNumber||'';
+  document.getElementById('cfgOpen').value=cfg.openTime||'09:00';
+  document.getElementById('cfgClose').value=cfg.closeTime||'21:00';
+  document.getElementById('cfgEarly').checked=cfg.earlyClose||false;
+  document.getElementById('cfgLat').value=cfg.lat||'';
+  document.getElementById('cfgLng').value=cfg.lng||'';
+  document.getElementById('cfgCover').value=cfg.coverKm||'';
+  document.getElementById('cfgRateFirst').value=cfg.rateFirstKm||2000;
+  document.getElementById('cfgRateNext').value=cfg.rateNextKm||1000;
+}
 
-        function renderMusicAdmin() {
-            const box = document.getElementById("musicAdminList");
-            if (!config.music) config.music = [];
-            box.innerHTML = config.music.map((url, idx) => `
-                <div class="music-admin-item">
-                    <input type="text" placeholder="https://example.com/lagu.mp3" value="${url}" onchange="config.music[${idx}]=this.value" style="flex:1;">
-                    <button class="btn btn-danger btn-sm" onclick="removeMusic(${idx})">🗑️</button>
-                </div>
-            `).join("");
-        }
-        function addMusicItem() { config.music.push(""); renderMusicAdmin(); }
-        function removeMusic(idx) { config.music.splice(idx,1); renderMusicAdmin(); }
+function renderHolidays(){
+  const box=document.getElementById('holidayList');
+  box.innerHTML=DAYS.map((d,i)=>`
+    <label class="hday-item">
+      <input type="checkbox" value="${i}" ${(cfg.holidays||[]).includes(i)?'checked':''}> ${d}
+    </label>`).join('');
+}
 
-        function saveConfig() {
-            config.restaurantName = document.getElementById("cfgName").value;
-            config.waNumber = document.getElementById("cfgWa").value.replace(/[^0-9]/g,"");
-            config.openTime = document.getElementById("cfgOpen").value;
-            config.closeTime = document.getElementById("cfgClose").value;
-            config.earlyClose = document.getElementById("cfgEarly").checked;
-            config.lat = parseFloat(document.getElementById("cfgLat").value) || 0;
-            config.lng = parseFloat(document.getElementById("cfgLng").value) || 0;
-            config.coverKm = parseFloat(document.getElementById("cfgCover").value) || 0;
-            config.rateFirstKm = parseInt(document.getElementById("cfgRateFirst").value) || 2000;
-            config.rateNextKm = parseInt(document.getElementById("cfgRateNext").value) || 1000;
+function renderMenuCat(cat,cid){
+  const box=document.getElementById(cid);
+  if(!cfg.menu)cfg.menu=[];
+  const items=cfg.menu.filter(m=>m.category===cat);
+  if(!items.length){box.innerHTML=`<p style="color:var(--p3);font-size:12px;padding:8px 0;font-style:italic;font-weight:300;">Belum ada menu.</p>`;return;}
+  box.innerHTML=items.map(item=>{
+    const ri=cfg.menu.indexOf(item);
+    return `<div class="menu-admin-row">
+      <input type="text" class="field field-sm" placeholder="Nama menu" value="${item.name}" onchange="cfg.menu[${ri}].name=this.value" style="flex:2;">
+      <input type="number" class="field field-sm" placeholder="Harga" value="${item.price}" onchange="cfg.menu[${ri}].price=parseInt(this.value)||0" style="flex:1;">
+      <input type="text" class="field field-sm" placeholder="URL Gambar" value="${item.image||''}" onchange="cfg.menu[${ri}].image=this.value" style="flex:2;">
+      <button class="btn-sm btn-del" onclick="delMenu(${ri})">🗑</button>
+    </div>`;
+  }).join('');
+}
+function addMenu(cat){
+  const nid=cfg.menu.length?Math.max(...cfg.menu.map(m=>m.id))+1:1;
+  cfg.menu.push({id:nid,name:'',price:0,image:'',category:cat});
+  renderMenuCat('makanan','menuMakananList');
+  renderMenuCat('minuman','menuMinumanList');
+  renderMenuCat('tambahan','menuTambahanList');
+}
+function delMenu(idx){
+  cfg.menu.splice(idx,1);
+  renderMenuCat('makanan','menuMakananList');
+  renderMenuCat('minuman','menuMinumanList');
+  renderMenuCat('tambahan','menuTambahanList');
+}
 
-            const hChecks = document.querySelectorAll('#holidayList input:checked');
-            config.holidays = Array.from(hChecks).map(c => parseInt(c.value));
+function renderMusicAdmin(){
+  const box=document.getElementById('musicAdminList');
+  if(!cfg.music)cfg.music=[];
+  box.innerHTML=cfg.music.map((url,idx)=>`
+    <div class="music-row">
+      <input type="text" class="field field-sm" placeholder="https://example.com/lagu.mp3" value="${url}" onchange="cfg.music[${idx}]=this.value" style="flex:1;">
+      <button class="btn-sm btn-del" onclick="delMusic(${idx})">🗑</button>
+    </div>`).join('');
+}
+function addMusic(){cfg.music.push('');renderMusicAdmin();}
+function delMusic(idx){cfg.music.splice(idx,1);renderMusicAdmin();}
 
-            localStorage.setItem("resto_config", JSON.stringify(config));
-            const notif = document.getElementById("saveNotif");
-            notif.style.display = "block";
-            setTimeout(() => notif.style.display = "none", 2000);
-            generateAdminQR();
-        }
+function saveCfg(){
+  cfg.restaurantName=document.getElementById('cfgName').value;
+  cfg.waNumber=document.getElementById('cfgWa').value.replace(/[^0-9]/g,'');
+  cfg.openTime=document.getElementById('cfgOpen').value;
+  cfg.closeTime=document.getElementById('cfgClose').value;
+  cfg.earlyClose=document.getElementById('cfgEarly').checked;
+  cfg.lat=parseFloat(document.getElementById('cfgLat').value)||0;
+  cfg.lng=parseFloat(document.getElementById('cfgLng').value)||0;
+  cfg.coverKm=parseFloat(document.getElementById('cfgCover').value)||0;
+  cfg.rateFirstKm=parseInt(document.getElementById('cfgRateFirst').value)||2000;
+  cfg.rateNextKm=parseInt(document.getElementById('cfgRateNext').value)||1000;
+  cfg.holidays=Array.from(document.querySelectorAll('#holidayList input:checked')).map(c=>parseInt(c.value));
+  localStorage.setItem('resto_config',JSON.stringify(cfg));
+  const ok=document.getElementById('saveOk');ok.style.display='block';
+  setTimeout(()=>ok.style.display='none',2500);
+  genAdminQR();
+}
 
-        function exportData() {
-            const data = {
-                config: JSON.parse(localStorage.getItem("resto_config") || "{}"),
-                orders: JSON.parse(localStorage.getItem("resto_orders") || "[]")
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url; a.download = "resto-backup.json"; a.click();
-        }
+/* ORDERS */
+function loadOrders(){
+  const orders=JSON.parse(localStorage.getItem('resto_orders')||'[]');
+  lastOrderCount=orders.length;
+  renderOrders(orders,false);
+}
+function checkNewOrders(){
+  const orders=JSON.parse(localStorage.getItem('resto_orders')||'[]');
+  if(orders.length>lastOrderCount){
+    const nc=orders.length-lastOrderCount;
+    lastOrderCount=orders.length;
+    const banner=document.getElementById('orderBanner');
+    const ttl=document.getElementById('bannerTtl');
+    ttl.textContent=`${nc} Pesanan Baru Masuk!`;
+    banner.classList.add('show');
+    const badge=document.getElementById('notifBadge');badge.textContent=nc;badge.style.display='flex';
+    if(document.getElementById('soundToggle').checked)playBeep();
+    setTimeout(()=>banner.classList.remove('show'),8000);
+    renderOrders(orders,true);
+  }
+}
+function renderOrders(orders,hlNew){
+  const box=document.getElementById('orderList');
+  if(!orders?.length){box.innerHTML='<div class="order-empty">Belum ada pesanan masuk.</div>';return;}
+  const sorted=[...orders].reverse();
+  box.innerHTML=sorted.map((o,i)=>{
+    const d=new Date(o.date),ts=d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="order-item ${hlNew&&i<1?'new':''}">
+      <div><div class="o-name">${o.name||'Tanpa Nama'}</div><div class="o-meta">${o.id} · ${ts}</div></div>
+      <div class="o-total">Rp ${(o.total||0).toLocaleString('id-ID')}</div>
+    </div>`;
+  }).join('');
+}
+function scrollToOrders(){
+  document.getElementById('ordersCard').scrollIntoView({behavior:'smooth'});
+  document.getElementById('orderBanner').classList.remove('show');
+  document.getElementById('notifBadge').style.display='none';
+}
+function playBeep(){
+  try{
+    if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();
+    [0,200].forEach(delay=>{
+      setTimeout(()=>{
+        const osc=audioCtx.createOscillator(),g=audioCtx.createGain();
+        osc.connect(g);g.connect(audioCtx.destination);
+        osc.type='sine';osc.frequency.setValueAtTime(880,audioCtx.currentTime);
+        osc.frequency.setValueAtTime(1100,audioCtx.currentTime+0.1);
+        g.gain.setValueAtTime(0.25,audioCtx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+0.4);
+        osc.start(audioCtx.currentTime);osc.stop(audioCtx.currentTime+0.4);
+      },delay);
+    });
+  }catch(e){}
+}
 
-        function importData() {
-            try {
-                const raw = document.getElementById("importArea").value;
-                const data = JSON.parse(raw);
-                if (data.config) localStorage.setItem("resto_config", JSON.stringify(data.config));
-                if (data.orders) localStorage.setItem("resto_orders", JSON.stringify(data.orders));
-                alert("Data berhasil diimport! Halaman akan direfresh.");
-                location.reload();
-            } catch(e) { alert("Format JSON tidak valid!"); }
-        }
+/* QR */
+function getBaseUrl(){if(window.location.protocol==='file:')return '';return window.location.origin+window.location.pathname.replace(/\/[^\/]*$/,'/');}
+function genAdminQR(){
+  const url=getBaseUrl()+'index.html';
+  const c=document.getElementById('adminQrCanvas');if(!c)return;
+  const ctx=c.getContext('2d');c.width=180;c.height=180;
+  if(navigator.onLine&&location.protocol!=='file:'){
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>ctx.drawImage(img,0,0,180,180);
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url||'https://warung-ct.web.app')}`;
+  }
+}
+function showShareModal(){
+  const url=getBaseUrl()+'index.html';
+  const m=document.getElementById('shareModal');m.style.display='flex';
+  document.getElementById('shareUrlTxt').textContent=url;
+  const c=document.getElementById('shareQrCanvas');if(!c)return;
+  const ctx=c.getContext('2d');c.width=180;c.height=180;
+  if(navigator.onLine&&location.protocol!=='file:'){
+    const img=new Image();img.crossOrigin='anonymous';
+    img.onload=()=>ctx.drawImage(img,0,0,180,180);
+    img.src=`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url)}`;
+  }
+}
+function closeShareModal(){document.getElementById('shareModal').style.display='none';}
+function cpAdminUrl(){
+  const url=getBaseUrl()+'index.html';
+  navigator.clipboard.writeText(url).then(()=>{
+    const b=document.querySelector('[onclick="cpAdminUrl()"]');
+    if(b){const orig=b.textContent;b.textContent='✅ Tersalin!';setTimeout(()=>b.textContent=orig,1800);}
+  });
+}
 
-        init();
-    </script>
+/* BACKUP */
+function exportData(){
+  const data={config:JSON.parse(localStorage.getItem('resto_config')||'{}'),orders:JSON.parse(localStorage.getItem('resto_orders')||'[]')};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='warung-ct-backup.json';a.click();
+}
+function importData(){
+  try{
+    const data=JSON.parse(document.getElementById('importArea').value);
+    if(data.config)localStorage.setItem('resto_config',JSON.stringify(data.config));
+    if(data.orders)localStorage.setItem('resto_orders',JSON.stringify(data.orders));
+    alert('Data berhasil diimport! Halaman akan direfresh.');location.reload();
+  }catch(e){alert('Format JSON tidak valid!');}
+}
+
+init();
+</script>
 </body>
 </html>
