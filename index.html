@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Pesan – WARUNG CT</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Cormorant:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="share.css">
+<style>
+:root{
+  --ink:#0a0806; --bg:#100d09; --card:#161210; --card-2:#1d1812; --card-3:#231e16;
+  --au:#c8913a; --au-hi:#e8c070; --au-lo:#8a6228;
+  --au-glow:rgba(200,145,58,0.11); --au-ring:rgba(200,145,58,0.22);
+  --parch:#f0e4cc; --parch-2:#a08660; --parch-3:#5e4c34; --parch-4:rgba(240,228,204,0.04);
+  --wire:rgba(255,255,255,0.055); --wire-2:rgba(255,255,255,0.10);
+  --ok:#4db870; --ok-bg:rgba(77,184,112,0.07);
+  --no:#d95b4a; --no-bg:rgba(217,91,74,0.07);
+  --r:16px; --r-sm:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);color:var(--parch);font-family:'DM Sans',sans-serif;font-weight:400;
+  min-height:100vh;padding-bottom:110px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.028'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(200,145,58,0.04) 0%, transparent 60%);
+}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px;}
+
+/* HEADER */
+header{
+  background:var(--ink);text-align:center;position:relative;overflow:hidden;
+  border-bottom:1px solid var(--au-ring);
+}
+header::before{
+  content:'';position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);
+  width:260px;height:80px;
+  background:radial-gradient(ellipse, rgba(200,145,58,0.13) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hdr-rule{height:1px;background:linear-gradient(90deg, transparent, var(--au-hi) 50%, transparent);}
+.hdr-inner{padding:24px 20px 20px;position:relative;z-index:1;}
+.hdr-pre{font-size:7.5px;font-weight:500;letter-spacing:6px;text-transform:uppercase;color:var(--parch-3);margin-bottom:14px;}
+.hdr-orn{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:10px;}
+.hdr-orn::before,.hdr-orn::after{content:'';flex:1;max-width:50px;height:1px;}
+.hdr-orn::before{background:linear-gradient(90deg,transparent,var(--au-lo));}
+.hdr-orn::after{background:linear-gradient(90deg,var(--au-lo),transparent);}
+.orn-lozenge{width:6px;height:6px;border:1px solid var(--au);transform:rotate(45deg);flex-shrink:0;background:linear-gradient(135deg,var(--au),var(--au-hi));}
+.hdr-logo{font-family:'Playfair Display',serif;font-size:38px;font-weight:900;color:var(--parch);letter-spacing:5px;line-height:1;}
+.hdr-logo em{font-style:normal;color:var(--au);text-shadow:0 0 40px rgba(232,192,112,0.2);}
+.hdr-tag{font-family:'Cormorant',serif;font-style:italic;font-size:14px;font-weight:300;color:var(--parch-3);letter-spacing:1.5px;margin-top:8px;}
+.hdr-badge{
+  display:inline-flex;align-items:center;gap:7px;margin-top:14px;
+  border:1px solid var(--wire-2);border-radius:100px;padding:5px 16px;
+  font-size:7.5px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--parch-3);
+  background:var(--parch-4);transition:all 0.3s;
+}
+.hdr-badge.open{color:var(--ok);border-color:rgba(77,184,112,0.22);background:rgba(77,184,112,0.04);}
+.hdr-badge.closed{color:var(--no);border-color:rgba(217,91,74,0.22);background:rgba(217,91,74,0.04);}
+.hdr-badge.early{color:#e8a040;border-color:rgba(232,160,64,0.22);background:rgba(232,160,64,0.04);}
+.badge-dot{width:5px;height:5px;border-radius:50%;background:currentColor;animation:pulse 2.4s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* MAIN */
+main{padding-top:8px;}
+.sec{padding:24px 0 8px;}
+.sec-title{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+}
+.sec-num{
+  font-family:'Playfair Display',serif;font-size:9px;font-weight:700;
+  background:linear-gradient(135deg,var(--au),var(--au-hi));color:var(--ink);
+  width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 2px 14px rgba(200,145,58,0.26);
+}
+.sec-lbl{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;}
+
+.alert{
+  display:none;padding:13px 16px;border-radius:var(--r-sm);font-size:12px;
+  margin-bottom:14px;font-weight:400;line-height:1.5;
+}
+.alert.danger{display:block;background:var(--no-bg);color:var(--no);border:1px solid rgba(217,91,74,0.2);}
+.alert.warning{display:block;background:rgba(232,160,64,0.06);color:#e8a040;border:1px solid rgba(232,160,64,0.2);}
+
+/* Inputs */
+.field{
+  width:100%;background:var(--card);border:1px solid var(--wire);border-radius:var(--r);
+  padding:14px 16px;font-family:'DM Sans';font-size:14px;color:var(--parch);
+  outline:none;transition:all 0.2s;margin-bottom:12px;font-weight:400;
+}
+.field::placeholder{color:var(--parch-3);}
+.field:focus{border-color:var(--au-ring);background:var(--card-2);box-shadow:0 0 0 3px var(--au-glow);}
+
+/* Location button */
+.btn-loc{
+  width:100%;background:transparent;border:1px solid var(--au-ring);border-radius:var(--r);
+  padding:14px 16px;cursor:pointer;transition:all 0.22s;
+  font-family:'DM Sans';font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--au);display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-loc:hover{background:var(--au-glow);}
+.btn-loc:disabled{opacity:0.6;cursor:not-allowed;}
+.btn-loc.success{color:var(--ok);border-color:rgba(77,184,112,0.3);background:rgba(77,184,112,0.04);}
+.btn-loc.error{color:var(--no);border-color:rgba(217,91,74,0.3);background:rgba(217,91,74,0.04);}
+
+.loc-detail{
+  display:none;margin-top:10px;background:var(--card);border:1px solid var(--au-ring);
+  border-radius:var(--r-sm);padding:13px 16px;font-size:12px;line-height:1.7;color:var(--parch-2);font-weight:300;
+}
+.loc-detail.show{display:block;}
+.loc-detail strong{color:var(--parch);}
+
+/* Cat pills */
+.cat-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.cat-pill{
+  font-size:8px;font-weight:500;letter-spacing:2px;text-transform:uppercase;
+  padding:5px 14px;border-radius:100px;display:inline-block;
+}
+.cat-makanan{background:rgba(200,145,58,0.08);color:var(--au);border:1px solid rgba(200,145,58,0.2);}
+.cat-minuman{background:rgba(77,184,112,0.08);color:var(--ok);border:1px solid rgba(77,184,112,0.2);}
+.cat-tambahan{background:rgba(232,160,64,0.08);color:#e8a040;border:1px solid rgba(232,160,64,0.2);}
+
+/* Menu */
+.menu-list{display:flex;flex-direction:column;gap:6px;margin-bottom:20px;}
+.menu-item{
+  background:var(--card);border:1px solid var(--wire);border-radius:var(--r-sm);
+  padding:12px 14px;display:flex;align-items:center;gap:12px;transition:all 0.16s;
+}
+.menu-item:hover{background:var(--card-2);border-color:var(--wire-2);}
+.menu-item.sel{background:var(--card-2);border-color:var(--au-ring);box-shadow:0 0 0 1px var(--au-glow);}
+.menu-img{
+  width:52px;height:52px;border-radius:10px;object-fit:cover;
+  background:var(--card-2);border:1px solid var(--wire);flex-shrink:0;
+}
+.menu-name{font-weight:400;font-size:13.5px;color:var(--parch);}
+.menu-price{font-family:'Cormorant',serif;font-size:13px;color:var(--au);margin-top:2px;font-weight:300;letter-spacing:0.3px;}
+.qty-ctrl{display:flex;align-items:center;gap:2px;background:var(--card-3);border:1px solid var(--wire);border-radius:10px;padding:3px;margin-left:auto;flex-shrink:0;}
+.menu-item.sel .qty-ctrl{border-color:var(--au-ring);}
+.q-btn{
+  width:30px;height:30px;background:none;border:none;font-size:17px;cursor:pointer;
+  color:var(--parch-3);border-radius:7px;transition:all 0.13s;
+  display:flex;align-items:center;justify-content:center;
+}
+.q-btn.minus:hover{background:var(--no-bg);color:var(--no);}
+.q-btn.plus{color:var(--au);}
+.q-btn.plus:hover{background:var(--au-glow);color:var(--au-hi);}
+.q-num{min-width:26px;text-align:center;font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:var(--parch);}
+.empty-menu{text-align:center;padding:28px;color:var(--parch-3);font-size:12px;font-style:italic;}
+
+/* Divider */
+.divider{display:flex;align-items:center;gap:12px;padding:8px 0 16px;}
+.div-ln{flex:1;height:1px;background:var(--wire);}
+.div-gem{width:4px;height:4px;background:var(--au-lo);transform:rotate(45deg);flex-shrink:0;}
+.div-txt{font-family:'Cormorant',serif;font-style:italic;font-size:13px;font-weight:300;color:var(--parch-3);letter-spacing:1px;white-space:nowrap;}
+
+/* Summary */
+.summary-card{
+  background:var(--card);border:1px solid var(--wire);border-radius:var(--r);
+  overflow:hidden;margin-bottom:16px;
+}
+.sum-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 16px;border-bottom:1px solid var(--wire);
+  font-size:13px;color:var(--parch-2);font-weight:300;
+}
+.sum-row:last-child{border:none;}
+.sum-total{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;background:var(--card-2);border-top:1px solid var(--au-ring);
+}
+.sum-total-lbl{font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;color:var(--parch-2);}
+.sum-total-val{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;color:var(--au);}
+.order-id-row{padding:8px 16px;font-size:10px;color:var(--parch-3);font-weight:300;border-top:1px solid var(--wire);}
+.order-id-row span{color:var(--au);font-family:'Playfair Display',serif;letter-spacing:1px;}
+.ongkir-note{font-size:10px;color:var(--parch-3);margin-top:2px;font-weight:300;}
+
+/* Bottom CTA */
+.bottom-cta{
+  position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;
+  background:var(--ink);border-top:1px solid var(--au-ring);
+  padding:14px 20px max(20px, env(safe-area-inset-bottom));
+  z-index:50;backdrop-filter:blur(20px);
+  box-shadow:0 -20px 50px rgba(0,0,0,0.4);
+}
+.btn-order{
+  width:100%;background:linear-gradient(135deg,var(--au),var(--au-hi));border:none;
+  border-radius:var(--r);padding:16px;
+  font-family:'DM Sans';font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--ink);cursor:pointer;transition:all 0.22s;
+  box-shadow:0 4px 22px rgba(200,145,58,0.26);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-order:hover:not(:disabled){box-shadow:0 6px 32px rgba(200,145,58,0.42);transform:translateY(-1px);}
+.btn-order:disabled{background:var(--card-2);color:var(--parch-3);cursor:not-allowed;box-shadow:none;transform:none;}
+
+.admin-link{
+  position:fixed;bottom:max(20px, env(safe-area-inset-bottom));right:16px;
+  background:var(--card-2);color:var(--parch-3);width:40px;height:40px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;font-size:1rem;border:1px solid var(--wire);z-index:100;transition:all 0.2s;
+}
+.admin-link:hover{border-color:var(--au-ring);color:var(--au);}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--wire-2);border-radius:2px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="hdr-rule"></div>
+  <div class="hdr-inner">
+    <div class="hdr-pre">Sejak Zaman Mojopahit</div>
+    <div class="hdr-orn"><div class="orn-lozenge"></div></div>
+    <div class="hdr-logo">WARUNG <em>CT</em></div>
+    <div class="hdr-tag">Pesan makanan favoritmu tanpa ribet</div>
+    <div id="statusBadge" class="hdr-badge open">
+      <div class="badge-dot"></div><span id="statusText">BUKA</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <main>
+    <div class="sec">
+      <div id="alertBox" class="alert"></div>
+
+      <!-- NAMA -->
+      <div class="sec-title">
+        <div class="sec-num">01</div>
+        <div class="sec-lbl">Nama Pemesan</div>
+      </div>
+      <input type="text" id="customerName" class="field" placeholder="Ketik nama kamu…" autocomplete="name">
+
+      <!-- LOKASI -->
+      <div class="sec-title" style="margin-top:8px;">
+        <div class="sec-num">02</div>
+        <div class="sec-lbl">Lokasi Pengantaran</div>
+      </div>
+      <button class="btn-loc" id="btnLocation" onclick="getLocation()">
+        <span>📍</span><span>Deteksi Lokasi</span>
+      </button>
+      <div id="locationInfo" class="loc-detail">
+        <strong>Lokasi terdeteksi</strong><br>
+        <span id="locAddress">Mengambil alamat…</span><br>
+        Jarak: <strong><span id="locDistance">-</span> km</strong>
+      </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="sec-title" style="padding-top:8px;">
+      <div class="sec-num">03</div>
+      <div class="sec-lbl">Pilih Menu</div>
+    </div>
+
+    <div class="divider"><div class="div-ln"></div><div class="div-gem"></div><div class="div-txt">Makanan</div><div class="div-gem"></div><div class="div-ln"></div></div>
+    <div id="menuMakananList" class="menu-list"></div>
+
+    <div class="divider"><div class="div-ln"></div><div class="div-gem"></div><div class="div-txt">Minuman</div><div class="div-gem"></div><div class="div-ln"></div></div>
+    <div id="menuMinumanList" class="menu-list"></div>
+
+    <div class="divider"><div class="div-ln"></div><div class="div-gem"></div><div class="div-txt">Tambahan</div><div class="div-gem"></div><div class="div-ln"></div></div>
+    <div id="menuTambahanList" class="menu-list"></div>
+
+    <!-- RINGKASAN -->
+    <div class="sec-title" style="margin-top:8px;">
+      <div class="sec-num">04</div>
+      <div class="sec-lbl">Ringkasan</div>
+    </div>
+    <div class="summary-card">
+      <div class="sum-row"><span>Subtotal</span><span id="sumSubtotal">Rp 0</span></div>
+      <div class="sum-row">
+        <div>
+          <div>Ongkir (<span id="sumKm">0</span> km)</div>
+          <div class="ongkir-note" id="ongkirDetail">–</div>
+        </div>
+        <span id="sumOngkir">Rp 0</span>
+      </div>
+      <div class="sum-total">
+        <div class="sum-total-lbl">Total Bayar</div>
+        <div class="sum-total-val" id="sumTotal">Rp 0</div>
+      </div>
+      <div class="order-id-row">ID Pesanan: <span id="orderId">–</span></div>
+    </div>
+  </main>
+</div>
+
+<div class="bottom-cta">
+  <button class="btn-order" id="btnOrder" onclick="sendOrder()" disabled>
+    <span>💬</span><span>Kirim Pesanan ke WhatsApp</span>
+  </button>
+</div>
+
+<a href="admin.html" class="admin-link" title="Admin">⚙️</a>
+<button class="share-btn" onclick="showShareModal()" title="Bagikan">🔗</button>
+
+<script src="share.js"></script>
+<script>
+let config={}, cart={}, customerLoc=null, distanceKm=0, orderId="";
+
+function init(){
+  loadConfig(); generateOrderId(); renderAllMenus(); checkOpenStatus(); updateSummary();
+}
+
+function loadConfig(){
+  const raw=localStorage.getItem("resto_config");
+  config=raw?JSON.parse(raw):getDefaultConfig();
+  if(config.menu&&config.menu.length>0&&!config.menu[0].category) config.menu.forEach(m=>m.category="makanan");
+  if(config.ratePerKm&&!config.rateFirstKm){config.rateFirstKm=config.ratePerKm;config.rateNextKm=config.ratePerKm;}
+}
+
+function getDefaultConfig(){
+  return{
+    restaurantName:"WARUNG CT",openTime:"09:00",closeTime:"21:00",earlyClose:false,holidays:[],
+    lat:-7.166571697154447,lng:112.32652687664304,coverKm:10,rateFirstKm:2000,rateNextKm:1000,
+    waNumber:"6281234567890",
+    menu:[
+      {id:1,name:"Nasi Goreng Spesial",price:25000,image:"",category:"makanan"},
+      {id:2,name:"Mie Ayam Bakso",price:20000,image:"",category:"makanan"},
+      {id:3,name:"Es Teh Manis",price:5000,image:"",category:"minuman"},
+      {id:4,name:"Kerupuk",price:2000,image:"",category:"tambahan"}
+    ],music:[]
+  };
+}
+
+function generateOrderId(){
+  const d=new Date(),pad=n=>n.toString().padStart(2,"0"),rand=Math.floor(Math.random()*900+100);
+  orderId=`ORD${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${rand}`;
+  document.getElementById("orderId").textContent=orderId;
+}
+
+function checkOpenStatus(){
+  const now=new Date(),day=now.getDay(),time=now.getHours()*60+now.getMinutes();
+  const[oh,om]=config.openTime.split(":").map(Number),[ch,cm]=config.closeTime.split(":").map(Number);
+  const openMin=oh*60+om,closeMin=ch*60+cm;
+  const badge=document.getElementById("statusBadge"),txt=document.getElementById("statusText");
+  let isOpen=time>=openMin&&time<closeMin;
+  badge.className="hdr-badge";
+  if(config.holidays.includes(day)){isOpen=false;badge.classList.add("closed");txt.innerText="LIBUR";showAlert("Warung libur hari ini.","danger");}
+  else if(config.earlyClose){isOpen=false;badge.classList.add("early");txt.innerText="TUTUP LEBIH CEPAT";showAlert("Warung tutup lebih cepat hari ini.","warning");}
+  else if(!isOpen){badge.classList.add("closed");txt.innerText="TUTUP";showAlert("Warung sedang tutup. Silakan kembali pada jam operasional.","danger");}
+  else{badge.classList.add("open");txt.innerText="BUKA";}
+  document.getElementById("btnOrder").disabled=!isOpen;
+}
+
+function getLocation(){
+  const btn=document.getElementById("btnLocation");
+  btn.disabled=true;btn.innerHTML="<span>⏳</span><span>Mendeteksi…</span>";
+  if(!navigator.geolocation){showAlert("Browser tidak mendukung geolokasi.","danger");btn.disabled=false;btn.innerHTML="<span>📍</span><span>Deteksi Lokasi</span>";return;}
+  navigator.geolocation.getCurrentPosition(pos=>{
+    customerLoc={lat:pos.coords.latitude,lng:pos.coords.longitude};
+    distanceKm=haversine(config.lat,config.lng,customerLoc.lat,customerLoc.lng);
+    const info=document.getElementById("locationInfo");
+    info.classList.add("show");
+    document.getElementById("locDistance").textContent=distanceKm.toFixed(2);
+    if(distanceKm>config.coverKm){
+      showAlert(`Lokasi di luar jangkauan (${distanceKm.toFixed(1)} km). Maksimal ${config.coverKm} km.`,"danger");
+      document.getElementById("btnOrder").disabled=true;
+      btn.className="btn-loc error";btn.innerHTML="<span>❌</span><span>Di Luar Jangkauan</span>";
+    }else{
+      hideAlert();
+      btn.className="btn-loc success";btn.innerHTML="<span>✅</span><span>Lokasi Terdeteksi</span>";
+    }
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${customerLoc.lat}&lon=${customerLoc.lng}&zoom=18`)
+      .then(r=>r.json()).then(d=>document.getElementById("locAddress").textContent=d.display_name||"Alamat tidak ditemukan")
+      .catch(()=>document.getElementById("locAddress").textContent="Alamat tidak dapat dimuat");
+    btn.disabled=false;updateSummary();
+  },err=>{
+    showAlert("Gagal mendapatkan lokasi: "+err.message,"danger");
+    btn.disabled=false;btn.innerHTML="<span>📍</span><span>Deteksi Lokasi</span>";
+  },{enableHighAccuracy:true,timeout:10000});
+}
+
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function renderAllMenus(){
+  renderMenuByCategory("makanan","menuMakananList");
+  renderMenuByCategory("minuman","menuMinumanList");
+  renderMenuByCategory("tambahan","menuTambahanList");
+}
+
+function renderMenuByCategory(cat,cid){
+  const c=document.getElementById(cid);
+  const items=(config.menu||[]).filter(m=>m.category===cat);
+  if(!items.length){c.innerHTML=`<div class="empty-menu">Belum ada menu ${cat}.</div>`;return;}
+  c.innerHTML=items.map(item=>`
+    <div class="menu-item" id="mi-${item.id}">
+      <img src="${item.image||`https://via.placeholder.com/52/1d1812/c8913a?text=${cat.slice(0,2).toUpperCase()}`}" class="menu-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/52/1d1812/c8913a?text=CT'">
+      <div style="flex:1;">
+        <div class="menu-name">${item.name}</div>
+        <div class="menu-price">Rp ${item.price.toLocaleString("id-ID")}</div>
+      </div>
+      <div class="qty-ctrl">
+        <button class="q-btn minus" onclick="changeQty(${item.id},-1)">−</button>
+        <span class="q-num" id="qty-${item.id}">0</span>
+        <button class="q-btn plus" onclick="changeQty(${item.id},1)">+</button>
+      </div>
+    </div>`).join("");
+}
+
+function changeQty(id,delta){
+  if(!cart[id])cart[id]=0;
+  cart[id]=Math.max(0,cart[id]+delta);
+  const el=document.getElementById(`qty-${id}`);if(el)el.textContent=cart[id];
+  const mi=document.getElementById(`mi-${id}`);if(mi)mi.classList.toggle("sel",cart[id]>0);
+  updateSummary();
+}
+
+function calculateOngkir(km){
+  const first=config.rateFirstKm||2000,next=config.rateNextKm||1000;
+  if(km<=0)return 0;if(km<=1)return first;
+  return first+Math.ceil(km-1)*next;
+}
+
+function updateSummary(){
+  let subtotal=0;
+  (config.menu||[]).forEach(item=>subtotal+=(cart[item.id]||0)*item.price);
+  const ongkir=calculateOngkir(distanceKm),total=subtotal+ongkir;
+  document.getElementById("sumSubtotal").textContent="Rp "+subtotal.toLocaleString("id-ID");
+  document.getElementById("sumOngkir").textContent="Rp "+ongkir.toLocaleString("id-ID");
+  document.getElementById("sumTotal").textContent="Rp "+total.toLocaleString("id-ID");
+  document.getElementById("sumKm").textContent=distanceKm.toFixed(1);
+  const first=config.rateFirstKm||2000,next=config.rateNextKm||1000;
+  let detail=`Km 1: Rp ${first.toLocaleString("id-ID")}`;
+  if(distanceKm>1)detail+=`, Km 2+: Rp ${next.toLocaleString("id-ID")}/km`;
+  document.getElementById("ongkirDetail").textContent=detail;
+}
+
+function sendOrder(){
+  const name=document.getElementById("customerName").value.trim();
+  if(!name){showAlert("Silakan isi nama terlebih dahulu.","warning");return;}
+  if(!customerLoc){showAlert("Silakan deteksi lokasi terlebih dahulu.","warning");return;}
+  const cats={makanan:[],minuman:[],tambahan:[]};let subtotal=0;
+  (config.menu||[]).forEach(item=>{
+    const qty=cart[item.id]||0;if(!qty)return;
+    const line=`• ${item.name} x${qty} = Rp ${(qty*item.price).toLocaleString("id-ID")}`;
+    (cats[item.category]||cats.makanan).push(line);subtotal+=qty*item.price;
+  });
+  if(!cats.makanan.length&&!cats.minuman.length&&!cats.tambahan.length){showAlert("Pilih minimal 1 menu.","warning");return;}
+  const ongkir=calculateOngkir(distanceKm),total=subtotal+ongkir;
+  let msg=`*PESANAN BARU - ${config.restaurantName}*\n\n*ID:* ${orderId}\n*Nama:* ${name}\n*Lokasi:* https://maps.google.com/?q=${customerLoc.lat},${customerLoc.lng}\n*Jarak:* ${distanceKm.toFixed(2)} km\n\n`;
+  if(cats.makanan.length)msg+=`*🍔 Makanan:*\n${cats.makanan.join("\n")}\n\n`;
+  if(cats.minuman.length)msg+=`*🥤 Minuman:*\n${cats.minuman.join("\n")}\n\n`;
+  if(cats.tambahan.length)msg+=`*🍟 Tambahan:*\n${cats.tambahan.join("\n")}\n\n`;
+  msg+=`*Subtotal:* Rp ${subtotal.toLocaleString("id-ID")}\n*Ongkir:* Rp ${ongkir.toLocaleString("id-ID")}\n*TOTAL:* Rp ${total.toLocaleString("id-ID")}`;
+  const history=JSON.parse(localStorage.getItem("resto_orders")||"[]");
+  history.push({id:orderId,name,total,date:new Date().toISOString()});
+  localStorage.setItem("resto_orders",JSON.stringify(history));
+  window.open(`https://wa.me/${config.waNumber}?text=${encodeURIComponent(msg)}`,"_blank");
+  setTimeout(()=>{window.location.href="music.html";},1500);
+}
+
+function showAlert(msg,type){const b=document.getElementById("alertBox");b.textContent=msg;b.className="alert "+type;}
+function hideAlert(){const b=document.getElementById("alertBox");b.className="alert";b.textContent="";}
+
+init();
+</script>
+</body>
+</html>
