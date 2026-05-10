@@ -1,299 +1,232 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0d0d0d">
-    <link rel="manifest" href="manifest.json">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>Terima Kasih - WARUNG CT</title>
-    <link rel="stylesheet" href="share.css">
-    <link rel="stylesheet" href="pwa.css">
-    <style>
-        :root {
-            --gold: #f5c518; --gold-dark: #c49b12;
-            --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
-            --border: #2a2a2a; --text: #f0ede6; --muted: #666666;
-            --danger: #ff4545; --success: #22c55e;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Syne', sans-serif; }
-        body {
-            background: var(--bg); min-height:100vh;
-            display:flex; flex-direction:column; align-items:center; justify-content:center;
-            padding:20px; color:var(--text); position: relative;
-        }
-        body::before {
-            content: '';
-            position: fixed; inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-            pointer-events: none; z-index: 9999;
-        }
-        .card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 24px; padding: 32px 28px;
-            width:100%; max-width:420px;
-            text-align:center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(245,197,24,0.03);
-            position: relative; z-index: 1;
-        }
-        .icon { font-size:4rem; margin-bottom:12px; animation:pop 0.5s ease; }
-        @keyframes pop { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
-        h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 1.8rem; letter-spacing: 2px;
-            margin-bottom: 8px; color: var(--gold);
-            text-shadow: 0 0 30px rgba(245,197,24,0.3);
-        }
-        p { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Terima Kasih – WARUNG CT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&family=Cormorant:ital,wght@0,300;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f0c09;--s1:#161210;--s2:#1c1814;--s3:#231e18;
+  --au:#c8913a;--au-hi:#e8c070;--au-lo:#8a6228;
+  --au-glow:rgba(200,145,58,0.12);--au-ring:rgba(200,145,58,0.24);
+  --parch:#f0e4cc;--p2:#a08660;--p3:#5e4c34;
+  --wire:rgba(255,255,255,0.06);--wire2:rgba(255,255,255,0.10);
+  --ok:#4db870;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);color:var(--parch);font-family:'DM Sans',sans-serif;
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:24px 16px;
+  background-image:
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.03'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,145,58,0.05) 0%, transparent 60%);
+}
+.card{
+  background:var(--s1);border:1px solid var(--wire2);border-radius:24px;
+  padding:32px 26px;width:100%;max-width:420px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4);
+  position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;top:0;left:15%;right:15%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--au-lo),transparent);
+}
 
-        .player-box {
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 16px; padding: 18px; margin-bottom: 18px;
-        }
-        .track-name {
-            font-size: 0.9rem; font-weight: 600;
-            margin-bottom: 12px; color: var(--text);
-            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-            font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px;
-        }
-        .progress-container {
-            width:100%; height:6px;
-            background: var(--border); border-radius:3px;
-            margin-bottom: 12px; cursor:pointer; position:relative;
-        }
-        .progress-bar {
-            height:100%; background: var(--gold); border-radius:3px;
-            width:0%; transition:width 0.1s linear;
-            box-shadow: 0 0 8px rgba(245,197,24,0.3);
-        }
-        .time-row {
-            display:flex; justify-content:space-between;
-            font-size: 0.7rem; color: var(--muted); margin-bottom: 12px;
-        }
-        .controls { display:flex; justify-content:center; align-items:center; gap:16px; }
-        .ctrl-btn {
-            width:48px; height:48px; border-radius:50%;
-            border: 1px solid var(--border);
-            background: var(--surface); color: var(--text);
-            font-size: 1.2rem; cursor:pointer;
-            display:flex; align-items:center; justify-content:center;
-            transition: all 0.2s;
-        }
-        .ctrl-btn:hover { border-color: var(--gold); color: var(--gold); }
-        .ctrl-btn:active { transform:scale(0.9); }
-        .ctrl-btn.play {
-            width:64px; height:64px;
-            background: var(--gold); color: var(--bg);
-            font-size: 1.5rem; border: none;
-            box-shadow: 0 0 20px rgba(245,197,24,0.2);
-        }
-        .ctrl-btn.play:hover { background: var(--gold-dark); box-shadow: 0 0 30px rgba(245,197,24,0.3); }
-        .ctrl-btn.play:active { background: var(--gold-dark); }
+/* Success ring */
+.icon-ring{
+  width:76px;height:76px;border-radius:50%;
+  background:radial-gradient(circle,rgba(200,145,58,0.18) 0%,rgba(200,145,58,0.04) 60%,transparent 100%);
+  border:1px solid var(--au-ring);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:32px;
+  animation:breathe 3s ease-in-out infinite;
+}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(200,145,58,0.22)}50%{box-shadow:0 0 0 14px rgba(200,145,58,0)}}
 
-        .playlist {
-            text-align:left; max-height:180px;
-            overflow-y:auto; margin-top:12px;
-        }
-        .playlist-item {
-            padding: 10px 14px; border-radius: 10px;
-            cursor:pointer; font-size: 0.85rem;
-            display:flex; align-items:center; gap:8px;
-            transition: all 0.2s; margin-bottom: 4px;
-            color: var(--muted); border: 1px solid transparent;
-        }
-        .playlist-item:hover { background: var(--surface2); color: var(--text); border-color: var(--border); }
-        .playlist-item.active {
-            background: rgba(245,197,24,0.08); color: var(--gold);
-            font-weight: 700; border-color: rgba(245,197,24,0.2);
-        }
-        .playlist-item .num {
-            width:20px; text-align:center;
-            opacity:0.7; font-size: 0.75rem;
-            font-family: 'Bebas Neue', sans-serif;
-        }
-        .empty-msg { font-size: 0.85rem; color: var(--muted); padding: 20px; text-align: center; }
-        .btn-home {
-            display:inline-block; margin-top:18px;
-            padding: 14px 28px;
-            background: var(--gold); color: var(--bg);
-            text-decoration:none; border-radius: 30px;
-            font-weight: 700; font-size: 0.95rem;
-            box-shadow: 0 4px 16px rgba(245,197,24,0.2);
-            transition: all 0.2s;
-            font-family: 'Syne', sans-serif;
-        }
-        .btn-home:hover { background: var(--gold-dark); box-shadow: 0 4px 24px rgba(245,197,24,0.3); }
-        .btn-home:active { transform:scale(0.95); }
+.page-ttl{
+  font-family:'Playfair Display',serif;font-size:24px;font-weight:700;
+  color:var(--au);text-align:center;letter-spacing:1px;margin-bottom:6px;
+  text-shadow:0 0 30px rgba(200,145,58,0.2);
+}
+.page-sub{
+  font-family:'Cormorant',serif;font-style:italic;font-size:14px;font-weight:300;
+  color:var(--p2);text-align:center;margin-bottom:24px;letter-spacing:0.5px;line-height:1.5;
+}
 
-        .visualizer {
-            display:flex; align-items:flex-end; justify-content:center;
-            gap:3px; height:30px; margin-bottom:14px;
-        }
-        .bar {
-            width:4px; background: var(--gold);
-            border-radius:2px; animation:bounce 1s infinite ease-in-out;
-            box-shadow: 0 0 6px rgba(245,197,24,0.3);
-        }
-        .bar:nth-child(2){animation-delay:0.1s;height:60%}
-        .bar:nth-child(3){animation-delay:0.2s;height:80%}
-        .bar:nth-child(4){animation-delay:0.3s;height:40%}
-        .bar:nth-child(5){animation-delay:0.15s;height:70%}
-        .paused .bar { animation-play-state:paused; height:20% !important; transition:height 0.3s; }
-        @keyframes bounce { 0%,100%{height:20%} 50%{height:100%} }
-        ::-webkit-scrollbar { width:6px; }
-        ::-webkit-scrollbar-track { background: var(--surface); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
-    </style>
+/* Player */
+.player-box{
+  background:var(--s2);border:1px solid var(--wire);
+  border-radius:16px;padding:18px;margin-bottom:16px;
+}
+
+/* Visualizer */
+.vis{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:28px;margin-bottom:14px;}
+.bar{width:4px;background:var(--au);border-radius:2px;box-shadow:0 0 6px rgba(200,145,58,0.3);animation:bounce 1s ease-in-out infinite;}
+.bar:nth-child(1){height:40%;animation-delay:0s;}
+.bar:nth-child(2){height:60%;animation-delay:0.1s;}
+.bar:nth-child(3){height:80%;animation-delay:0.2s;}
+.bar:nth-child(4){height:40%;animation-delay:0.3s;}
+.bar:nth-child(5){height:70%;animation-delay:0.15s;}
+.vis.paused .bar{animation-play-state:paused;height:20%!important;transition:height 0.3s;}
+@keyframes bounce{0%,100%{height:20%}50%{height:100%}}
+
+.track-nm{
+  font-family:'Playfair Display',serif;font-size:14px;font-weight:600;letter-spacing:1.5px;
+  color:var(--parch);text-align:center;margin-bottom:12px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.progress-wrap{width:100%;height:4px;background:var(--s3);border-radius:2px;margin-bottom:10px;cursor:pointer;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--au),var(--au-hi));border-radius:2px;width:0%;transition:width 0.1s linear;box-shadow:0 0 6px rgba(200,145,58,0.3);}
+.time-row{display:flex;justify-content:space-between;font-size:10px;color:var(--p3);font-weight:300;margin-bottom:14px;}
+.ctrls{display:flex;justify-content:center;align-items:center;gap:18px;}
+.ctrl{
+  width:46px;height:46px;border-radius:50%;border:1px solid var(--wire2);
+  background:var(--s3);color:var(--p2);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all 0.18s;
+}
+.ctrl:hover{border-color:var(--au-ring);color:var(--au);}
+.ctrl.play{
+  width:60px;height:60px;font-size:20px;
+  background:linear-gradient(135deg,var(--au),var(--au-hi));
+  border:none;color:#0a0806;
+  box-shadow:0 4px 20px rgba(200,145,58,0.32);
+}
+.ctrl.play:hover{box-shadow:0 6px 28px rgba(200,145,58,0.48);transform:scale(1.04);}
+
+/* Playlist */
+.playlist{max-height:180px;overflow-y:auto;margin-top:14px;}
+.pl-item{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;
+  cursor:pointer;font-size:13px;color:var(--p2);
+  border:1px solid transparent;transition:all 0.15s;margin-bottom:3px;
+  font-weight:300;
+}
+.pl-item:hover{background:var(--s3);color:var(--parch);}
+.pl-item.active{background:rgba(200,145,58,0.08);color:var(--au);border-color:rgba(200,145,58,0.18);}
+.pl-num{width:20px;text-align:center;font-family:'Playfair Display',serif;font-size:11px;color:var(--p3);}
+.pl-empty{font-size:12px;color:var(--p3);padding:16px;text-align:center;font-style:italic;font-weight:300;}
+
+/* Buttons */
+.btn-home{
+  display:block;width:100%;margin-top:16px;padding:14px;
+  background:linear-gradient(135deg,var(--au),var(--au-hi));
+  color:#0a0806;border:none;border-radius:14px;
+  font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;
+  cursor:pointer;text-align:center;text-decoration:none;
+  box-shadow:0 4px 18px rgba(200,145,58,0.24);transition:all 0.2s;
+}
+.btn-home:hover{box-shadow:0 6px 28px rgba(200,145,58,0.38);transform:translateY(-1px);}
+
+/* Share fab */
+.share-fab{position:fixed;bottom:24px;right:18px;width:46px;height:46px;border-radius:50%;background:var(--s2);border:1px solid var(--wire2);color:var(--p2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;z-index:90;}
+.share-fab:hover{border-color:var(--au-ring);color:var(--au);}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--wire2);border-radius:2px;}
+</style>
 </head>
 <body>
-    <div class="card">
-        <div class="icon">🎉</div>
-        <h1>Pesanan Diterima!</h1>
-        <p>Terima kasih telah memesan. Nikmati playlist spesial dari kami sambil menunggu pesananmu.</p>
+<div class="card">
+  <div class="icon-ring">🎉</div>
+  <div class="page-ttl">Pesanan Diterima!</div>
+  <div class="page-sub">Nikmati playlist spesial dari kami<br>sambil menunggu pesananmu</div>
 
-        <div class="player-box">
-            <div class="visualizer paused" id="visualizer">
-                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-            </div>
-            <div class="track-name" id="trackName">Tidak ada lagu</div>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-            <div class="time-row">
-                <span id="currentTime">0:00</span>
-                <span id="duration">0:00</span>
-            </div>
-            <div class="controls">
-                <button class="ctrl-btn" id="btnPrev" onclick="prevTrack()">⏮</button>
-                <button class="ctrl-btn play" id="btnPlay" onclick="togglePlay()">▶</button>
-                <button class="ctrl-btn" id="btnNext" onclick="nextTrack()">⏭</button>
-            </div>
-        </div>
-
-        <div class="playlist" id="playlist">
-            <div class="empty-msg">Owner belum menambahkan playlist.</div>
-        </div>
-
-        <a href="index.html" class="btn-home">🔄 Pesan Lagi</a>
+  <div class="player-box">
+    <div class="vis paused" id="vis">
+      <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
     </div>
+    <div class="track-nm" id="trackNm">Tidak ada lagu</div>
+    <div class="progress-wrap" id="progWrap">
+      <div class="progress-fill" id="progFill"></div>
+    </div>
+    <div class="time-row"><span id="tNow">0:00</span><span id="tDur">0:00</span></div>
+    <div class="ctrls">
+      <button class="ctrl" onclick="prevTrack()">⏮</button>
+      <button class="ctrl play" id="btnPlay" onclick="togglePlay()">▶</button>
+      <button class="ctrl" onclick="nextTrack()">⏭</button>
+    </div>
+    <div class="playlist" id="playlist">
+      <div class="pl-empty">Owner belum menambahkan playlist.</div>
+    </div>
+  </div>
 
-    <button class="share-btn" onclick="showShareModal()" title="Bagikan Resto">🔗</button>
+  <a href="index.html" class="btn-home">🔄 Pesan Lagi</a>
+</div>
 
-    <script src="share.js"></script>
-    <script src="pwa.js"></script>
-    <script>
-        let config = {};
-        let audio = new Audio();
-        let currentIndex = 0;
-        let isPlaying = false;
-        let playlist = [];
+<button class="share-fab" onclick="showShareModal()">🔗</button>
 
-        function init() {
-            loadConfig();
-            playlist = config.music || [];
-            renderPlaylist();
-            if (playlist.length > 0) loadTrack(0);
-            if (playlist.length > 0) {
-                setTimeout(() => togglePlay(), 500);
-            }
-        }
+<script>
+let cfg={},audio=new Audio(),curIdx=0,isPlaying=false,playlist=[];
 
-        function loadConfig() {
-            const raw = localStorage.getItem("resto_config");
-            config = raw ? JSON.parse(raw) : { music: [] };
-        }
+function init(){
+  const raw=localStorage.getItem('resto_config');
+  cfg=raw?JSON.parse(raw):{music:[]};
+  playlist=cfg.music||[];
+  renderPL();
+  if(playlist.length){loadTrack(0);setTimeout(()=>togglePlay(),600);}
+}
 
-        function renderPlaylist() {
-            const box = document.getElementById("playlist");
-            if (!playlist || playlist.length === 0) {
-                box.innerHTML = '<div class="empty-msg">Owner belum menambahkan playlist.</div>';
-                return;
-            }
-            box.innerHTML = playlist.map((url, i) => {
-                const name = url.split('/').pop().replace(/\.mp3|\.ogg|\.wav/i, '') || `Lagu ${i+1}`;
-                return `<div class="playlist-item ${i===0?'active':''}" onclick="playTrack(${i})" id="pl-${i}">
-                    <span class="num">${i+1}</span>
-                    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${decodeURIComponent(name)}</span>
-                </div>`;
-            }).join('');
-        }
+function renderPL(){
+  const box=document.getElementById('playlist');
+  if(!playlist.length){box.innerHTML='<div class="pl-empty">Owner belum menambahkan playlist.</div>';return;}
+  box.innerHTML=playlist.map((url,i)=>{
+    const nm=decodeURIComponent(url.split('/').pop().replace(/\.(mp3|ogg|wav)$/i,'')||`Lagu ${i+1}`);
+    return `<div class="pl-item ${i===0?'active':''}" id="pl-${i}" onclick="playTrack(${i})">
+      <span class="pl-num">${i+1}</span>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${nm}</span>
+    </div>`;
+  }).join('');
+}
 
-        function loadTrack(index) {
-            currentIndex = index;
-            audio.src = playlist[index];
-            audio.load();
-            const name = playlist[index].split('/').pop().replace(/\.mp3|\.ogg|\.wav/i, '') || `Lagu ${index+1}`;
-            document.getElementById("trackName").textContent = decodeURIComponent(name);
-            updatePlaylistActive();
-        }
+function loadTrack(idx){
+  curIdx=idx;audio.src=playlist[idx];audio.load();
+  const nm=decodeURIComponent(playlist[idx].split('/').pop().replace(/\.(mp3|ogg|wav)$/i,'')||`Lagu ${idx+1}`);
+  document.getElementById('trackNm').textContent=nm;
+  document.getElementById('progFill').style.width='0%';
+  document.querySelectorAll('.pl-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+}
 
-        function updatePlaylistActive() {
-            document.querySelectorAll('.playlist-item').forEach((el, i) => {
-                el.classList.toggle('active', i === currentIndex);
-            });
-        }
+function togglePlay(){
+  if(!audio.src)return;
+  if(isPlaying){audio.pause();isPlaying=false;document.getElementById('btnPlay').textContent='▶';document.getElementById('vis').classList.add('paused');}
+  else{audio.play().catch(()=>{});isPlaying=true;document.getElementById('btnPlay').textContent='⏸';document.getElementById('vis').classList.remove('paused');}
+}
 
-        function togglePlay() {
-            if (!audio.src) return;
-            if (isPlaying) {
-                audio.pause();
-                isPlaying = false;
-                document.getElementById("btnPlay").textContent = "▶";
-                document.getElementById("visualizer").classList.add("paused");
-            } else {
-                audio.play().catch(()=>{});
-                isPlaying = true;
-                document.getElementById("btnPlay").textContent = "⏸";
-                document.getElementById("visualizer").classList.remove("paused");
-            }
-        }
+function playTrack(idx){loadTrack(idx);isPlaying=false;togglePlay();}
+function nextTrack(){if(playlist.length)playTrack((curIdx+1)%playlist.length);}
+function prevTrack(){if(playlist.length)playTrack((curIdx-1+playlist.length)%playlist.length);}
 
-        function playTrack(index) {
-            loadTrack(index);
-            isPlaying = false;
-            togglePlay();
-        }
+audio.addEventListener('timeupdate',()=>{
+  if(!audio.duration)return;
+  const p=(audio.currentTime/audio.duration)*100;
+  document.getElementById('progFill').style.width=p+'%';
+  document.getElementById('tNow').textContent=fmtT(audio.currentTime);
+  document.getElementById('tDur').textContent=fmtT(audio.duration);
+});
+audio.addEventListener('ended',nextTrack);
+document.getElementById('progWrap').addEventListener('click',e=>{
+  const r=e.currentTarget.getBoundingClientRect();
+  if(audio.duration)audio.currentTime=((e.clientX-r.left)/r.width)*audio.duration;
+});
+function fmtT(s){if(!s||isNaN(s))return'0:00';return Math.floor(s/60)+':'+Math.floor(s%60).toString().padStart(2,'0');}
 
-        function nextTrack() {
-            if (playlist.length === 0) return;
-            currentIndex = (currentIndex + 1) % playlist.length;
-            playTrack(currentIndex);
-        }
+/* Share */
+function getBaseUrl(){if(window.location.protocol==='file:')return '';return window.location.origin+window.location.pathname.replace(/\/[^\/]*$/,'/');}
+function showShareModal(){
+  const url=getBaseUrl()+'index.html';
+  const el=document.createElement('div');el.id='shareModal';
+  el.innerHTML=`<div style="position:fixed;inset:0;background:rgba(4,3,2,0.85);backdrop-filter:blur(16px);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;" onclick="document.getElementById('shareModal').remove()"><div style="background:var(--s1);border:1px solid var(--wire2);border-radius:22px;padding:28px 22px;max-width:320px;width:100%;text-align:center;" onclick="event.stopPropagation()"><div style="font-family:'Playfair Display',serif;font-size:17px;margin-bottom:18px;">Bagikan Warung CT</div><div style="background:var(--s2);border-radius:14px;padding:16px;margin-bottom:14px;"><canvas id="qrCanvas"></canvas></div><p style="font-size:11px;color:var(--p2);word-break:break-all;margin-bottom:14px;background:var(--s2);padding:8px 12px;border-radius:9px;">${url}</p><button onclick="cpUrl()" style="width:100%;padding:13px;border:none;border-radius:11px;background:linear-gradient(135deg,var(--au),var(--au-hi));color:#0a0806;font-size:12px;font-weight:500;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-bottom:8px;">Salin Link</button><button onclick="document.getElementById('shareModal').remove()" style="width:100%;padding:12px;border:1px solid var(--wire2);border-radius:11px;background:transparent;color:var(--p2);cursor:pointer;">Tutup</button></div></div>`;
+  document.body.appendChild(el);
+  const c=document.getElementById('qrCanvas');if(!c)return;const ctx=c.getContext('2d');c.width=200;c.height=200;const img=new Image();img.crossOrigin='anonymous';img.onload=()=>ctx.drawImage(img,0,0,200,200);img.src=`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(url)}`;
+}
+function cpUrl(){navigator.clipboard.writeText(getBaseUrl()+'index.html').then(()=>{const b=document.querySelector('[onclick="cpUrl()"]');b.textContent='✅ Tersalin!';setTimeout(()=>b.textContent='Salin Link',1800);});}
 
-        function prevTrack() {
-            if (playlist.length === 0) return;
-            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
-            playTrack(currentIndex);
-        }
-
-        audio.addEventListener('timeupdate', () => {
-            if (!audio.duration) return;
-            const pct = (audio.currentTime / audio.duration) * 100;
-            document.getElementById("progressBar").style.width = pct + "%";
-            document.getElementById("currentTime").textContent = formatTime(audio.currentTime);
-            document.getElementById("duration").textContent = formatTime(audio.duration);
-        });
-
-        audio.addEventListener('ended', () => {
-            nextTrack();
-        });
-
-        document.getElementById("progressContainer").addEventListener('click', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const pct = (e.clientX - rect.left) / rect.width;
-            if (audio.duration) audio.currentTime = pct * audio.duration;
-        });
-
-        function formatTime(s) {
-            if (!s || isNaN(s)) return "0:00";
-            const m = Math.floor(s/60);
-            const sec = Math.floor(s%60);
-            return m + ":" + sec.toString().padStart(2,"0");
-        }
-
-        init();
-    </script>
+init();
+</script>
 </body>
 </html>
