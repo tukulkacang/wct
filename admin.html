@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Admin - WARUNG CT</title>
+    <link rel="stylesheet" href="share.css">
+    <link rel="stylesheet" href="pwa.css">
+    <style>
+        :root {
+            --gold: #f5c518; --gold-dark: #c49b12;
+            --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
+            --border: #2a2a2a; --text: #f0ede6; --muted: #666666;
+            --danger: #ff4545; --success: #22c55e; --orange: #fb923c;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Syne', sans-serif; }
+        body {
+            background: var(--bg); color: var(--text); min-height:100vh; padding-bottom:80px; position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+        .container { max-width:600px; margin:0 auto; padding:16px; position: relative; z-index: 1; }
+        header {
+            background: var(--surface); color: var(--text);
+            padding: 24px 16px; text-align: center;
+            border-bottom: 1px solid var(--border); border-radius: 0 0 24px 24px;
+            margin-bottom: 20px; position: relative; overflow: hidden;
+        }
+        header::before {
+            content: ''; position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(245,197,24,0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        header h1 {
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem;
+            letter-spacing: 3px; color: var(--gold);
+            text-shadow: 0 0 40px rgba(245,197,24,0.4);
+            position: relative;
+        }
+        .notif-badge {
+            position: absolute; top: 16px; right: 16px;
+            background: var(--danger); color: white;
+            width: 24px; height: 24px; border-radius: 50%;
+            font-size: 0.7rem; font-weight: 700;
+            display: none; align-items: center; justify-content: center;
+            box-shadow: 0 0 10px rgba(255,69,69,0.4);
+            animation: pulseBadge 1.5s infinite;
+        }
+        @keyframes pulseBadge { 0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.4)} 50%{box-shadow:0 0 0 8px rgba(255,69,69,0)} }
+
+        .card {
+            background: var(--surface); border-radius: 16px;
+            padding: 18px; margin-bottom: 16px;
+            border: 1px solid var(--border); position: relative;
+        }
+        .card-title {
+            font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem;
+            letter-spacing: 1px; margin-bottom: 14px;
+            display: flex; align-items: center; gap: 8px; color: var(--text);
+        }
+        label { font-size: 0.8rem; font-weight: 600; color: var(--muted); display: block; margin-bottom: 6px; margin-top: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select, textarea {
+            width: 100%; padding: 12px 14px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; font-size: 0.95rem;
+            color: var(--text); outline: none; transition: all 0.2s;
+            font-family: 'Syne', sans-serif;
+        }
+        input::placeholder { color: var(--muted); }
+        input:focus, select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,197,24,0.1); }
+        .row { display: flex; gap: 10px; }
+        .col { flex: 1; }
+        .btn {
+            padding: 12px 16px; border: none; border-radius: 10px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; font-family: 'Syne', sans-serif;
+        }
+        .btn-primary {
+            background: var(--gold); color: var(--bg); width: 100%; margin-top: 10px;
+            box-shadow: 0 0 15px rgba(245,197,24,0.1);
+        }
+        .btn-primary:hover { background: var(--gold-dark); box-shadow: 0 0 25px rgba(245,197,24,0.2); }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-danger { background: rgba(255,69,69,0.15); color: var(--danger); border: 1px solid rgba(255,69,69,0.3); }
+        .btn-danger:hover { background: rgba(255,69,69,0.25); }
+        .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+        .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 6px; }
+        .menu-admin-item {
+            display: flex; gap: 8px; align-items: center;
+            margin-bottom: 8px; padding: 10px;
+            background: var(--surface2); border-radius: 10px;
+            border: 1px solid var(--border); flex-wrap: wrap;
+        }
+        .menu-admin-item input, .menu-admin-item select { margin: 0; }
+        .music-admin-item {
+            display: flex; gap: 8px; align-items: center;
+            margin-bottom: 8px;
+        }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--border); transition: .4s; border-radius: 28px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 20px; width: 20px;
+            left: 4px; bottom: 4px; background: var(--text); transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background: var(--gold); }
+        input:checked + .slider:before { transform: translateX(22px); background: var(--bg); }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .saved { color: var(--success); font-weight: 700; text-align: center; margin-top: 8px; display: none; }
+        .back-link { display: inline-block; margin-bottom: 16px; color: var(--gold); text-decoration: none; font-weight: 600; }
+        .back-link:hover { color: var(--gold-dark); }
+        .section-desc { font-size: 0.75rem; color: var(--muted); margin-bottom: 10px; line-height: 1.5; }
+        .qr-admin-box { text-align: center; background: var(--surface2); border-radius: 12px; padding: 16px; margin-bottom: 12px; border: 1px solid var(--border); }
+        .qr-admin-box canvas { border-radius: 8px; }
+        .qr-admin-box p { font-size: 0.8rem; color: var(--muted); margin-top: 8px; }
+        .btn-qr { background: var(--success); color: var(--bg); width: auto; padding: 10px 20px; }
+        .btn-qr:hover { background: #1ea446; }
+
+        .order-banner {
+            background: linear-gradient(135deg, rgba(231,76,60,0.2), rgba(192,57,43,0.2));
+            color: var(--danger); border: 1px solid rgba(255,69,69,0.3);
+            border-radius: 12px; padding: 14px;
+            margin-bottom: 16px; display: none;
+            align-items: center; gap: 12px;
+            animation: pulseBanner 1.5s infinite;
+            cursor: pointer; backdrop-filter: blur(4px);
+        }
+        .order-banner.show { display: flex; }
+        .order-banner-icon { font-size: 1.5rem; }
+        .order-banner-text { flex: 1; }
+        .order-banner-title { font-weight: 700; font-size: 0.95rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px; }
+        .order-banner-sub { font-size: 0.8rem; opacity: 0.9; }
+        @keyframes pulseBanner { 0%,100%{box-shadow:0 0 0 0 rgba(255,69,69,0.2)} 50%{box-shadow:0 0 0 10px rgba(255,69,69,0)} }
+
+        .order-list { max-height: 300px; overflow-y: auto; }
+        .order-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; background: var(--surface2); border-radius: 10px;
+            margin-bottom: 8px; border-left: 3px solid var(--gold);
+            border: 1px solid var(--border); border-left: 3px solid var(--gold);
+        }
+        .order-item.new { border-left-color: var(--danger); background: rgba(255,69,69,0.05); animation: highlight 2s; }
+        @keyframes highlight { 0%{background:rgba(255,69,69,0.1)} 100%{background:rgba(255,69,69,0.05)} }
+        .order-info { flex: 1; }
+        .order-name { font-weight: 700; font-size: 0.9rem; }
+        .order-meta { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+        .order-total { font-weight: 700; color: var(--gold); font-size: 0.95rem; font-family: 'Bebas Neue', sans-serif; }
+        .order-empty { text-align: center; color: var(--muted); padding: 20px; font-size: 0.9rem; }
+        .sound-toggle {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.85rem; color: var(--muted); margin-bottom: 10px;
+        }
+        .cat-badge {
+            font-size: 0.65rem; padding: 3px 10px; border-radius: 10px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            display: inline-block; margin-bottom: 4px;
+        }
+        .cat-makanan { background: rgba(245,197,24,0.1); color: var(--gold); border: 1px solid rgba(245,197,24,0.2); }
+        .cat-minuman { background: rgba(34,197,94,0.1); color: var(--success); border: 1px solid rgba(34,197,94,0.2); }
+        .cat-tambahan { background: rgba(251,146,60,0.1); color: var(--orange); border: 1px solid rgba(251,146,60,0.2); }
+        select {
+            background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>⚙️ PENGATURAN WARUNG CT</h1>
+        <div class="notif-badge" id="notifBadge">0</div>
+    </header>
+    <div class="container">
+        <a href="index.html" class="back-link">← Kembali ke Halaman Pesan</a>
+
+        <div class="order-banner" id="orderBanner" onclick="scrollToOrders()">
+            <div class="order-banner-icon">🔔</div>
+            <div class="order-banner-text">
+                <div class="order-banner-title">Pesanan Baru Masuk!</div>
+                <div class="order-banner-sub">Klik untuk lihat detail</div>
+            </div>
+        </div>
+
+        <div class="card" id="ordersCard">
+            <div class="card-title"><span>📋</span> Order Masuk</div>
+            <div class="sound-toggle">
+                <label class="switch" style="width:40px;height:22px;">
+                    <input type="checkbox" id="soundToggle" checked>
+                    <span class="slider" style="border-radius:22px;"></span>
+                </label>
+                <span>🔔 Notifikasi Suara</span>
+            </div>
+            <div class="order-list" id="orderList">
+                <div class="order-empty">Belum ada pesanan masuk.</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🔗</span> Bagikan ke Customer</div>
+            <p class="section-desc">Customer bisa scan QR atau klik link untuk langsung ke halaman pesan.</p>
+            <div class="qr-admin-box">
+                <canvas id="adminQrCanvas" width="180" height="180"></canvas>
+                <p>Scan QR untuk pesan</p>
+            </div>
+            <div class="row">
+                <button class="btn btn-qr" onclick="showShareModal()">🔗 Link & QR Besar</button>
+                <button class="btn btn-secondary" onclick="copyShareUrl()">📋 Salin Link</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🏪</span> Informasi Restoran</div>
+            <label>Nama Restoran</label>
+            <input type="text" id="cfgName" placeholder="Nama Restoran">
+            <label>Nomor WhatsApp Owner (format: 628xx)</label>
+            <input type="text" id="cfgWa" placeholder="6281234567890">
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🕐</span> Jam Operasional</div>
+            <div class="row">
+                <div class="col">
+                    <label>Jam Buka</label>
+                    <input type="time" id="cfgOpen">
+                </div>
+                <div class="col">
+                    <label>Jam Tutup</label>
+                    <input type="time" id="cfgClose">
+                </div>
+            </div>
+            <div class="toggle-row" style="margin-top:14px;">
+                <span>Tutup Lebih Cepat</span>
+                <label class="switch">
+                    <input type="checkbox" id="cfgEarly">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <label style="margin-top:10px;">Hari Libur</label>
+            <div id="holidayList" style="display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>📍</span> Lokasi & Pengantaran</div>
+            <div class="row">
+                <div class="col">
+                    <label>Latitude</label>
+                    <input type="number" step="any" id="cfgLat" placeholder="-7.1665">
+                </div>
+                <div class="col">
+                    <label>Longitude</label>
+                    <input type="number" step="any" id="cfgLng" placeholder="112.3265">
+                </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+                <div class="col">
+                    <label>Area Cover (km)</label>
+                    <input type="number" id="cfgCover" placeholder="10">
+                </div>
+            </div>
+            <label style="margin-top:10px;">Ongkir Km Pertama (Rp)</label>
+            <input type="number" id="cfgRateFirst" placeholder="2000">
+            <label>Ongkir Km Kedua & Seterusnya (Rp/km)</label>
+            <input type="number" id="cfgRateNext" placeholder="1000">
+            <p class="section-desc">Contoh: 3 km = Rp 2.000 + (2 × Rp 1.000) = Rp 4.000</p>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🍔</span> Menu Makanan</div>
+            <div id="menuMakananList"></div>
+            <button class="btn btn-primary" onclick="addMenuItem('makanan')">+ Tambah Makanan</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🥤</span> Menu Minuman</div>
+            <div id="menuMinumanList"></div>
+            <button class="btn btn-primary" onclick="addMenuItem('minuman')">+ Tambah Minuman</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🍟</span> Menu Tambahan</div>
+            <div id="menuTambahanList"></div>
+            <button class="btn btn-primary" onclick="addMenuItem('tambahan')">+ Tambah Tambahan</button>
+        </div>
+
+        <div class="card">
+            <div class="card-title"><span>🎵</span> Playlist Musik</div>
+            <p class="section-desc">Masukkan link langsung ke file mp3/audio.</p>
+            <div id="musicAdminList"></div>
+            <button class="btn btn-primary" onclick="addMusicItem()">+ Tambah Lagu</button>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveConfig()" style="padding:16px; font-size:1.05rem;">
+            💾 Simpan Semua Pengaturan
+        </button>
+        <div class="saved" id="saveNotif">✅ Pengaturan berhasil disimpan!</div>
+
+        <div class="card" style="margin-top:20px;">
+            <div class="card-title"><span>💾</span> Backup / Restore</div>
+            <button class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
+            <label style="margin-top:10px;">Import Data (paste JSON)</label>
+            <textarea id="importArea" rows="4" placeholder="Paste JSON di sini..."></textarea>
+            <button class="btn btn-primary" onclick="importData()">📤 Import Data</button>
+        </div>
+    </div>
+
+    <script src="share.js"></script>
+    <script src="pwa.js"></script>
+    <script>
+        let config = {};
+        const days = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+        let lastOrderCount = 0;
+        let audioCtx = null;
+
+        function init() {
+            loadConfig();
+            renderForm();
+            renderHolidays();
+            renderAllMenus();
+            renderMusicAdmin();
+            generateAdminQR();
+            loadOrders();
+            startOrderPolling();
+        }
+
+        function startOrderPolling() {
+            loadOrders();
+            setInterval(() => { checkNewOrders(); }, 3000);
+        }
+
+        function checkNewOrders() {
+            const orders = JSON.parse(localStorage.getItem("resto_orders") || "[]");
+            if (orders.length > lastOrderCount) {
+                const newCount = orders.length - lastOrderCount;
+                lastOrderCount = orders.length;
+                showOrderNotification(newCount);
+                renderOrders(orders, true);
+            }
+        }
+
+        function showOrderNotification(count) {
+            const banner = document.getElementById("orderBanner");
+            banner.querySelector('.order-banner-title').textContent = `${count} Pesanan Baru Masuk!`;
+            banner.classList.add("show");
+            const badge = document.getElementById("notifBadge");
+            badge.textContent = count;
+            badge.style.display = "flex";
+            if (document.getElementById("soundToggle").checked) playBeep();
+            setTimeout(() => { banner.classList.remove("show"); }, 8000);
+        }
+
+        function playBeep() {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                osc.start(audioCtx.currentTime); osc.stop(audioCtx.currentTime + 0.4);
+                setTimeout(() => {
+                    const osc2 = audioCtx.createOscillator();
+                    const gain2 = audioCtx.createGain();
+                    osc2.connect(gain2); gain2.connect(audioCtx.destination);
+                    osc2.type = 'sine'; osc2.frequency.setValueAtTime(880, audioCtx.currentTime);
+                    osc2.frequency.setValueAtTime(1100, audioCtx.currentTime + 0.1);
+                    gain2.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc2.start(audioCtx.currentTime); osc2.stop(audioCtx.currentTime + 0.4);
+                }, 200);
+            } catch(e) {}
+        }
+
+        function loadOrders() {
+            const orders = JSON.parse(localStorage.getItem("resto_orders") || "[]");
+            lastOrderCount = orders.length;
+            renderOrders(orders, false);
+        }
+
+        function renderOrders(orders, highlightNew) {
+            const box = document.getElementById("orderList");
+            if (!orders || orders.length === 0) {
+                box.innerHTML = '<div class="order-empty">Belum ada pesanan masuk.</div>';
+                return;
+            }
+            const sorted = [...orders].reverse();
+            box.innerHTML = sorted.map((o, i) => {
+                const date = new Date(o.date);
+                const timeStr = date.toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
+                const isNew = highlightNew && i < (orders.length - lastOrderCount + sorted.length - orders.length);
+                return `
+                    <div class="order-item ${isNew?'new':''}">
+                        <div class="order-info">
+                            <div class="order-name">${o.name || 'Tanpa Nama'}</div>
+                            <div class="order-meta">${o.id} • ${timeStr}</div>
+                        </div>
+                        <div class="order-total">Rp ${(o.total||0).toLocaleString('id-ID')}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function scrollToOrders() {
+            document.getElementById("ordersCard").scrollIntoView({ behavior: 'smooth' });
+            document.getElementById("orderBanner").classList.remove("show");
+            document.getElementById("notifBadge").style.display = "none";
+        }
+
+        function loadConfig() {
+            const raw = localStorage.getItem("resto_config");
+            if (raw) config = JSON.parse(raw);
+            else {
+                config = {
+                    restaurantName: "WARUNG CT",
+                    openTime: "09:00",
+                    closeTime: "21:00",
+                    earlyClose: false,
+                    holidays: [],
+                    lat: -7.166571697154447,
+                    lng: 112.32652687664304,
+                    coverKm: 10,
+                    rateFirstKm: 2000,
+                    rateNextKm: 1000,
+                    waNumber: "6281234567890",
+                    menu: [
+                        { id:1, name:"Nasi Goreng Spesial", price:25000, image:"", category:"makanan" },
+                        { id:2, name:"Mie Ayam Bakso", price:20000, image:"", category:"makanan" },
+                        { id:3, name:"Es Teh Manis", price:5000, image:"", category:"minuman" },
+                        { id:4, name:"Kerupuk", price:2000, image:"", category:"tambahan" }
+                    ],
+                    music: []
+                };
+            }
+            if (config.menu && config.menu.length > 0 && !config.menu[0].category) {
+                config.menu.forEach(m => m.category = "makanan");
+            }
+            if (config.ratePerKm && !config.rateFirstKm) {
+                config.rateFirstKm = config.ratePerKm;
+                config.rateNextKm = config.ratePerKm;
+            }
+        }
+
+        function generateAdminQR() {
+            const url = getBaseUrl() + "index.html";
+            const canvas = document.getElementById("adminQrCanvas");
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            canvas.width = 180; canvas.height = 180;
+            if (navigator.onLine && window.location.protocol !== "file:") {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.onload = () => ctx.drawImage(img, 0, 0, 180, 180);
+                img.onerror = () => drawFallbackQR(ctx, 180, url || "https://warung-ct.web.app");
+                img.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(url || "https://warung-ct.web.app")}`;
+            } else {
+                drawFallbackQR(ctx, 180, url || "https://warung-ct.web.app");
+            }
+        }
+
+        function renderForm() {
+            document.getElementById("cfgName").value = config.restaurantName || "";
+            document.getElementById("cfgWa").value = config.waNumber || "";
+            document.getElementById("cfgOpen").value = config.openTime || "09:00";
+            document.getElementById("cfgClose").value = config.closeTime || "21:00";
+            document.getElementById("cfgEarly").checked = config.earlyClose || false;
+            document.getElementById("cfgLat").value = config.lat || "";
+            document.getElementById("cfgLng").value = config.lng || "";
+            document.getElementById("cfgCover").value = config.coverKm || "";
+            document.getElementById("cfgRateFirst").value = config.rateFirstKm || 2000;
+            document.getElementById("cfgRateNext").value = config.rateNextKm || 1000;
+        }
+
+        function renderHolidays() {
+            const box = document.getElementById("holidayList");
+            box.innerHTML = days.map((d,i) => `
+                <label style="display:flex; align-items:center; gap:4px; font-size:0.8rem; font-weight:500; cursor:pointer; background:var(--surface2); padding:4px 10px; border-radius:20px; border:1px solid var(--border); color:var(--text);">
+                    <input type="checkbox" value="${i}" ${(config.holidays||[]).includes(i)?'checked':''}>
+                    ${d}
+                </label>
+            `).join("");
+        }
+
+        function renderAllMenus() {
+            renderMenuByCategory('makanan', 'menuMakananList');
+            renderMenuByCategory('minuman', 'menuMinumanList');
+            renderMenuByCategory('tambahan', 'menuTambahanList');
+        }
+
+        function renderMenuByCategory(cat, containerId) {
+            const box = document.getElementById(containerId);
+            if (!config.menu) config.menu = [];
+            const items = config.menu.filter(m => m.category === cat);
+            if (items.length === 0) {
+                box.innerHTML = '<p style="color:var(--muted);font-size:0.85rem;padding:8px;">Belum ada menu.</p>';
+                return;
+            }
+            box.innerHTML = items.map((item, idx) => {
+                const realIdx = config.menu.indexOf(item);
+                return `
+                <div class="menu-admin-item">
+                    <input type="text" placeholder="Nama menu" value="${item.name}" onchange="config.menu[${realIdx}].name=this.value" style="flex:2;">
+                    <input type="number" placeholder="Harga" value="${item.price}" onchange="config.menu[${realIdx}].price=parseInt(this.value)||0" style="flex:1;">
+                    <input type="text" placeholder="URL Gambar (opsional)" value="${item.image||''}" onchange="config.menu[${realIdx}].image=this.value" style="flex:2;">
+                    <button class="btn btn-danger btn-sm" onclick="removeMenu(${realIdx})">🗑️</button>
+                </div>
+            `}).join("");
+        }
+
+        function addMenuItem(category) {
+            const newId = config.menu.length > 0 ? Math.max(...config.menu.map(m=>m.id)) + 1 : 1;
+            config.menu.push({ id: newId, name:"", price:0, image:"", category });
+            renderAllMenus();
+        }
+        function removeMenu(idx) { config.menu.splice(idx,1); renderAllMenus(); }
+
+        function renderMusicAdmin() {
+            const box = document.getElementById("musicAdminList");
+            if (!config.music) config.music = [];
+            box.innerHTML = config.music.map((url, idx) => `
+                <div class="music-admin-item">
+                    <input type="text" placeholder="https://example.com/lagu.mp3" value="${url}" onchange="config.music[${idx}]=this.value" style="flex:1;">
+                    <button class="btn btn-danger btn-sm" onclick="removeMusic(${idx})">🗑️</button>
+                </div>
+            `).join("");
+        }
+        function addMusicItem() { config.music.push(""); renderMusicAdmin(); }
+        function removeMusic(idx) { config.music.splice(idx,1); renderMusicAdmin(); }
+
+        function saveConfig() {
+            config.restaurantName = document.getElementById("cfgName").value;
+            config.waNumber = document.getElementById("cfgWa").value.replace(/[^0-9]/g,"");
+            config.openTime = document.getElementById("cfgOpen").value;
+            config.closeTime = document.getElementById("cfgClose").value;
+            config.earlyClose = document.getElementById("cfgEarly").checked;
+            config.lat = parseFloat(document.getElementById("cfgLat").value) || 0;
+            config.lng = parseFloat(document.getElementById("cfgLng").value) || 0;
+            config.coverKm = parseFloat(document.getElementById("cfgCover").value) || 0;
+            config.rateFirstKm = parseInt(document.getElementById("cfgRateFirst").value) || 2000;
+            config.rateNextKm = parseInt(document.getElementById("cfgRateNext").value) || 1000;
+
+            const hChecks = document.querySelectorAll('#holidayList input:checked');
+            config.holidays = Array.from(hChecks).map(c => parseInt(c.value));
+
+            localStorage.setItem("resto_config", JSON.stringify(config));
+            const notif = document.getElementById("saveNotif");
+            notif.style.display = "block";
+            setTimeout(() => notif.style.display = "none", 2000);
+            generateAdminQR();
+        }
+
+        function exportData() {
+            const data = {
+                config: JSON.parse(localStorage.getItem("resto_config") || "{}"),
+                orders: JSON.parse(localStorage.getItem("resto_orders") || "[]")
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url; a.download = "resto-backup.json"; a.click();
+        }
+
+        function importData() {
+            try {
+                const raw = document.getElementById("importArea").value;
+                const data = JSON.parse(raw);
+                if (data.config) localStorage.setItem("resto_config", JSON.stringify(data.config));
+                if (data.orders) localStorage.setItem("resto_orders", JSON.stringify(data.orders));
+                alert("Data berhasil diimport! Halaman akan direfresh.");
+                location.reload();
+            } catch(e) { alert("Format JSON tidak valid!"); }
+        }
+
+        init();
+    </script>
+</body>
+</html>

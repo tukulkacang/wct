@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Terima Kasih - WARUNG CT</title>
+    <link rel="stylesheet" href="share.css">
+    <link rel="stylesheet" href="pwa.css">
+    <style>
+        :root {
+            --gold: #f5c518; --gold-dark: #c49b12;
+            --bg: #0d0d0d; --surface: #161616; --surface2: #1e1e1e;
+            --border: #2a2a2a; --text: #f0ede6; --muted: #666666;
+            --danger: #ff4545; --success: #22c55e;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Syne', sans-serif; }
+        body {
+            background: var(--bg); min-height:100vh;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            padding:20px; color:var(--text); position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none; z-index: 9999;
+        }
+        .card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 24px; padding: 32px 28px;
+            width:100%; max-width:420px;
+            text-align:center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 60px rgba(245,197,24,0.03);
+            position: relative; z-index: 1;
+        }
+        .icon { font-size:4rem; margin-bottom:12px; animation:pop 0.5s ease; }
+        @keyframes pop { 0%{transform:scale(0)} 80%{transform:scale(1.1)} 100%{transform:scale(1)} }
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem; letter-spacing: 2px;
+            margin-bottom: 8px; color: var(--gold);
+            text-shadow: 0 0 30px rgba(245,197,24,0.3);
+        }
+        p { font-size: 0.9rem; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+        .player-box {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 16px; padding: 18px; margin-bottom: 18px;
+        }
+        .track-name {
+            font-size: 0.9rem; font-weight: 600;
+            margin-bottom: 12px; color: var(--text);
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+            font-family: 'Bebas Neue', sans-serif; letter-spacing: 1px;
+        }
+        .progress-container {
+            width:100%; height:6px;
+            background: var(--border); border-radius:3px;
+            margin-bottom: 12px; cursor:pointer; position:relative;
+        }
+        .progress-bar {
+            height:100%; background: var(--gold); border-radius:3px;
+            width:0%; transition:width 0.1s linear;
+            box-shadow: 0 0 8px rgba(245,197,24,0.3);
+        }
+        .time-row {
+            display:flex; justify-content:space-between;
+            font-size: 0.7rem; color: var(--muted); margin-bottom: 12px;
+        }
+        .controls { display:flex; justify-content:center; align-items:center; gap:16px; }
+        .ctrl-btn {
+            width:48px; height:48px; border-radius:50%;
+            border: 1px solid var(--border);
+            background: var(--surface); color: var(--text);
+            font-size: 1.2rem; cursor:pointer;
+            display:flex; align-items:center; justify-content:center;
+            transition: all 0.2s;
+        }
+        .ctrl-btn:hover { border-color: var(--gold); color: var(--gold); }
+        .ctrl-btn:active { transform:scale(0.9); }
+        .ctrl-btn.play {
+            width:64px; height:64px;
+            background: var(--gold); color: var(--bg);
+            font-size: 1.5rem; border: none;
+            box-shadow: 0 0 20px rgba(245,197,24,0.2);
+        }
+        .ctrl-btn.play:hover { background: var(--gold-dark); box-shadow: 0 0 30px rgba(245,197,24,0.3); }
+        .ctrl-btn.play:active { background: var(--gold-dark); }
+
+        .playlist {
+            text-align:left; max-height:180px;
+            overflow-y:auto; margin-top:12px;
+        }
+        .playlist-item {
+            padding: 10px 14px; border-radius: 10px;
+            cursor:pointer; font-size: 0.85rem;
+            display:flex; align-items:center; gap:8px;
+            transition: all 0.2s; margin-bottom: 4px;
+            color: var(--muted); border: 1px solid transparent;
+        }
+        .playlist-item:hover { background: var(--surface2); color: var(--text); border-color: var(--border); }
+        .playlist-item.active {
+            background: rgba(245,197,24,0.08); color: var(--gold);
+            font-weight: 700; border-color: rgba(245,197,24,0.2);
+        }
+        .playlist-item .num {
+            width:20px; text-align:center;
+            opacity:0.7; font-size: 0.75rem;
+            font-family: 'Bebas Neue', sans-serif;
+        }
+        .empty-msg { font-size: 0.85rem; color: var(--muted); padding: 20px; text-align: center; }
+        .btn-home {
+            display:inline-block; margin-top:18px;
+            padding: 14px 28px;
+            background: var(--gold); color: var(--bg);
+            text-decoration:none; border-radius: 30px;
+            font-weight: 700; font-size: 0.95rem;
+            box-shadow: 0 4px 16px rgba(245,197,24,0.2);
+            transition: all 0.2s;
+            font-family: 'Syne', sans-serif;
+        }
+        .btn-home:hover { background: var(--gold-dark); box-shadow: 0 4px 24px rgba(245,197,24,0.3); }
+        .btn-home:active { transform:scale(0.95); }
+
+        .visualizer {
+            display:flex; align-items:flex-end; justify-content:center;
+            gap:3px; height:30px; margin-bottom:14px;
+        }
+        .bar {
+            width:4px; background: var(--gold);
+            border-radius:2px; animation:bounce 1s infinite ease-in-out;
+            box-shadow: 0 0 6px rgba(245,197,24,0.3);
+        }
+        .bar:nth-child(2){animation-delay:0.1s;height:60%}
+        .bar:nth-child(3){animation-delay:0.2s;height:80%}
+        .bar:nth-child(4){animation-delay:0.3s;height:40%}
+        .bar:nth-child(5){animation-delay:0.15s;height:70%}
+        .paused .bar { animation-play-state:paused; height:20% !important; transition:height 0.3s; }
+        @keyframes bounce { 0%,100%{height:20%} 50%{height:100%} }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background: var(--surface); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">🎉</div>
+        <h1>Pesanan Diterima!</h1>
+        <p>Terima kasih telah memesan. Nikmati playlist spesial dari kami sambil menunggu pesananmu.</p>
+
+        <div class="player-box">
+            <div class="visualizer paused" id="visualizer">
+                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+            </div>
+            <div class="track-name" id="trackName">Tidak ada lagu</div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="time-row">
+                <span id="currentTime">0:00</span>
+                <span id="duration">0:00</span>
+            </div>
+            <div class="controls">
+                <button class="ctrl-btn" id="btnPrev" onclick="prevTrack()">⏮</button>
+                <button class="ctrl-btn play" id="btnPlay" onclick="togglePlay()">▶</button>
+                <button class="ctrl-btn" id="btnNext" onclick="nextTrack()">⏭</button>
+            </div>
+        </div>
+
+        <div class="playlist" id="playlist">
+            <div class="empty-msg">Owner belum menambahkan playlist.</div>
+        </div>
+
+        <a href="index.html" class="btn-home">🔄 Pesan Lagi</a>
+    </div>
+
+    <button class="share-btn" onclick="showShareModal()" title="Bagikan Resto">🔗</button>
+
+    <script src="share.js"></script>
+    <script src="pwa.js"></script>
+    <script>
+        let config = {};
+        let audio = new Audio();
+        let currentIndex = 0;
+        let isPlaying = false;
+        let playlist = [];
+
+        function init() {
+            loadConfig();
+            playlist = config.music || [];
+            renderPlaylist();
+            if (playlist.length > 0) loadTrack(0);
+            if (playlist.length > 0) {
+                setTimeout(() => togglePlay(), 500);
+            }
+        }
+
+        function loadConfig() {
+            const raw = localStorage.getItem("resto_config");
+            config = raw ? JSON.parse(raw) : { music: [] };
+        }
+
+        function renderPlaylist() {
+            const box = document.getElementById("playlist");
+            if (!playlist || playlist.length === 0) {
+                box.innerHTML = '<div class="empty-msg">Owner belum menambahkan playlist.</div>';
+                return;
+            }
+            box.innerHTML = playlist.map((url, i) => {
+                const name = url.split('/').pop().replace(/\.mp3|\.ogg|\.wav/i, '') || `Lagu ${i+1}`;
+                return `<div class="playlist-item ${i===0?'active':''}" onclick="playTrack(${i})" id="pl-${i}">
+                    <span class="num">${i+1}</span>
+                    <span style="flex:1;overflow:hidden;text-overflow:ellipsis;">${decodeURIComponent(name)}</span>
+                </div>`;
+            }).join('');
+        }
+
+        function loadTrack(index) {
+            currentIndex = index;
+            audio.src = playlist[index];
+            audio.load();
+            const name = playlist[index].split('/').pop().replace(/\.mp3|\.ogg|\.wav/i, '') || `Lagu ${index+1}`;
+            document.getElementById("trackName").textContent = decodeURIComponent(name);
+            updatePlaylistActive();
+        }
+
+        function updatePlaylistActive() {
+            document.querySelectorAll('.playlist-item').forEach((el, i) => {
+                el.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function togglePlay() {
+            if (!audio.src) return;
+            if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                document.getElementById("btnPlay").textContent = "▶";
+                document.getElementById("visualizer").classList.add("paused");
+            } else {
+                audio.play().catch(()=>{});
+                isPlaying = true;
+                document.getElementById("btnPlay").textContent = "⏸";
+                document.getElementById("visualizer").classList.remove("paused");
+            }
+        }
+
+        function playTrack(index) {
+            loadTrack(index);
+            isPlaying = false;
+            togglePlay();
+        }
+
+        function nextTrack() {
+            if (playlist.length === 0) return;
+            currentIndex = (currentIndex + 1) % playlist.length;
+            playTrack(currentIndex);
+        }
+
+        function prevTrack() {
+            if (playlist.length === 0) return;
+            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+            playTrack(currentIndex);
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            if (!audio.duration) return;
+            const pct = (audio.currentTime / audio.duration) * 100;
+            document.getElementById("progressBar").style.width = pct + "%";
+            document.getElementById("currentTime").textContent = formatTime(audio.currentTime);
+            document.getElementById("duration").textContent = formatTime(audio.duration);
+        });
+
+        audio.addEventListener('ended', () => {
+            nextTrack();
+        });
+
+        document.getElementById("progressContainer").addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            if (audio.duration) audio.currentTime = pct * audio.duration;
+        });
+
+        function formatTime(s) {
+            if (!s || isNaN(s)) return "0:00";
+            const m = Math.floor(s/60);
+            const sec = Math.floor(s%60);
+            return m + ":" + sec.toString().padStart(2,"0");
+        }
+
+        init();
+    </script>
+</body>
+</html>
